@@ -1,0 +1,25 @@
+DEBUG: all keys: APPLINKDIR, BINDIR, CMAKECONFIGDIR, ENGINESDIR, INCLUDEDIR, LDLIBS, LIBDIR, MODULESDIR, PKGCONFIGDIR, PREFIX, VERSION, libdir
+DEBUG: PREFIX = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install => PREFIX = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install
+DEBUG: libdir = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib => libdir = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib
+DEBUG: BINDIR = bin => DEBUG: all keys: APPLINKDIR, BINDIR, CMAKECONFIGDIR, ENGINESDIR, INCLUDEDIR, LDLIBS, LIBDIR, MODULESDIR, PKGCONFIGDIR, PREFIX, VERSION, libdir
+BINDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/bin, BINDIR_REL_PREFIX = bin
+DEBUG: LIBDIR = lib => No value given for CMAKECONFIGDIR
+LIBDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib, LIBDIR_REL_PREFIX = libNo value given for PKGCONFIGDIR
+
+No value given for libdir
+DEBUG: INCLUDEDIR = include => DEBUG: PREFIX = . => INCLUDEDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/include, INCLUDEDIR_REL_PREFIX = include
+DEBUG: APPLINKDIR = include/openssl => APPLINKDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/include/openssl, APPLINKDIR_REL_PREFIX = include/openssl
+DEBUG: ENGINESDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib/engines-3 => ENGINESDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib/engines-3, ENGINESDIR_REL_LIBDIR = engines-3
+DEBUG: MODULESDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib/ossl-modules => PREFIX = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src
+DEBUG: libdir = . => MODULESDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib/ossl-modules, MODULESDIR_REL_LIBDIR = ossl-modules
+DEBUG: PKGCONFIGDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib/pkgconfig => libdir = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src
+DEBUG: BINDIR = apps => PKGCONFIGDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib/pkgconfig, PKGCONFIGDIR_REL_LIBDIR = pkgconfig
+DEBUG: CMAKECONFIGDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib/cmake/OpenSSL => BINDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src/apps, BINDIR_REL_PREFIX = apps
+DEBUG: LIBDIR =  => LIBDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src, LIBDIR_REL_PREFIX = 
+DEBUG: INCLUDEDIR = CMAKECONFIGDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/install/lib/cmake/OpenSSL, CMAKECONFIGDIR_REL_LIBDIR = cmake/OpenSSL
+[ include, ./include ] => INCLUDEDIR = [ /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src/include, /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src/include ], INCLUDEDIR_REL_PREFIX = [ include, ./include ]
+DEBUG: APPLINKDIR = ms => APPLINKDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src/ms, APPLINKDIR_REL_PREFIX = ms
+DEBUG: ENGINESDIR = engines => ENGINESDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src/engines, ENGINESDIR_REL_LIBDIR = engines
+DEBUG: MODULESDIR = providers => MODULESDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src/providers, MODULESDIR_REL_LIBDIR = providers
+DEBUG: PKGCONFIGDIR = . => PKGCONFIGDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src, PKGCONFIGDIR_REL_LIBDIR = .
+DEBUG: CMAKECONFIGDIR = . => CMAKECONFIGDIR = /Users/minjun/Desktop/z-fubao-1/program/target/debug/build/openssl-sys-a73bd15a800d04c7/out/openssl-build/build/src, CMAKECONFIGDIR_REL_LIBDIR = .

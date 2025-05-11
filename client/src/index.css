@@ -1,0 +1,11 @@
+@import './reset.css';
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+:root {
+  --color-background: #09090b;
+  --color-text: #f1f1f1;
+}
