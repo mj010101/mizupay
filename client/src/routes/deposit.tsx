@@ -62,8 +62,8 @@ function Deposit() {
                 color: "var(--gray-11)",
               }}
             >
-              Deposit your native BTC to get zBTC tokens in return. These tokens
-              can be used as collateral to mint zUSD or for staking.
+              Deposit your native BTC to get LBTC tokens in return. These tokens
+              can be used as collateral to mint LUSD or for staking.
             </Text>
           </Flex>
           <Flex justify="center" width="100%">

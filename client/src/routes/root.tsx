@@ -152,7 +152,7 @@ function Root() {
                   marginTop: "-8px",
                 }}
               >
-                Powered by zBTC
+                Powered by LBTC
               </Text>
 
               <Text
@@ -162,8 +162,8 @@ function Root() {
                   color: "var(--gray-12)",
                 }}
               >
-                zUSD: the foremost yield-bearing stablecoin on Solana. Fully
-                backed by Bitcoin.
+                LUSD: the foremost yield-bearing stablecoin on Sui. Fully backed
+                by Bitcoin.
               </Text>
 
               <Flex gap="4" mt="4">
@@ -462,7 +462,7 @@ function Root() {
                   Asset Locking & Minting
                 </Heading>
                 <Text style={{ color: "var(--gray-12)" }}>
-                  Lock zBTC as collateral and mint zUSD with a 70% LTV ratio
+                  Lock LBTC as collateral and mint LUSD with a 70% LTV ratio
                 </Text>
               </Flex>
             </Card>

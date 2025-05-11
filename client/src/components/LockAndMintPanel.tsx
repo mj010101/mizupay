@@ -59,7 +59,7 @@ export function LockAndMintPanel() {
     setIsProcessing(true);
     try {
       console.log(
-        `Locking ${btcAmount} zBTC as collateral and minting ${usdAmount} zUSD`
+        `Locking ${btcAmount} zBTC as collateral and minting ${usdAmount} zUSD`,
       );
 
       await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -67,7 +67,7 @@ export function LockAndMintPanel() {
       setBtcAmount("");
       setUsdAmount("");
       alert(
-        `Successfully locked ${btcAmount} zBTC and minted ${usdAmount} zUSD`
+        `Successfully locked ${btcAmount} zBTC and minted ${usdAmount} zUSD`,
       );
     } catch (error: unknown) {
       console.error("Operation failed:", error);
@@ -112,7 +112,7 @@ export function LockAndMintPanel() {
                 weight="bold"
                 style={{ color: "var(--indigo-11)" }}
               >
-                Lock zBTC as Collateral
+                Lock LBTC as Collateral
               </Text>
               <Flex gap="2" align="center">
                 <Box
@@ -129,8 +129,8 @@ export function LockAndMintPanel() {
                 >
                   {tokenIcons.zBTC.endsWith(".svg") ? (
                     <img
-                      src={tokenIcons.zBTC}
-                      alt="zBTC"
+                      src={tokenIcons.LBTC}
+                      alt="LBTC"
                       style={{
                         width: "20px",
                         height: "20px",

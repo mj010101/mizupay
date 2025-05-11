@@ -20,8 +20,8 @@ type Mode = "btc" | "zusd";
 
 const modeRatesMap: Record<Mode, TokenRates> = {
   btc: {
-    "BTC-zBTC": 1,
-    "zBTC-BTC": 1,
+    "BTC-LBTC": 1,
+    "LBTC-BTC": 1,
   },
   zusd: {
     "zUSD-szUSD": 1,
@@ -44,9 +44,9 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
     if (mode === "btc") {
       if (activeTab === "stake") {
         setFromToken("BTC");
-        setToToken("zBTC");
+        setToToken("LBTC");
       } else {
-        setFromToken("zBTC");
+        setFromToken("LBTC");
         setToToken("BTC");
       }
     } else if (mode === "zusd") {
@@ -80,14 +80,14 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
     setIsSwapping(true);
     try {
       console.log(
-        `Swapping ${amount} ${fromToken} for approximately ${getEstimatedAmount()} ${toToken}`
+        `Swapping ${amount} ${fromToken} for approximately ${getEstimatedAmount()} ${toToken}`,
       );
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setAmount("");
       alert(
-        `Successfully swapped ${amount} ${fromToken} to ${getEstimatedAmount()} ${toToken}`
+        `Successfully swapped ${amount} ${fromToken} to ${getEstimatedAmount()} ${toToken}`,
       );
     } catch (error: unknown) {
       console.error("Swap failed:", error);

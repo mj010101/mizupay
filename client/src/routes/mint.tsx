@@ -62,7 +62,7 @@ function Mint() {
                 color: "var(--gray-11)",
               }}
             >
-              Lock your zBTC as collateral and mint zUSD tokens. Your zBTC will
+              Lock your LBTC as collateral and mint LUSD tokens. Your LBTC will
               be locked with a 70% LTV ratio to ensure stability of the
               protocol.
             </Text>
