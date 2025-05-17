@@ -17,11 +17,11 @@ export type ChainContext = Readonly<{
 
 // Sui 기본 체인 설정
 export const DEFAULT_CHAIN_CONFIG = Object.freeze({
-  chain: "sui:devnet",
-  displayName: "Sui Devnet",
-  network: "devnet",
-  suiExplorerUrl: "https://explorer.sui.io/txblock?network=devnet",
-  suiRpcUrl: "https://fullnode.devnet.sui.io:443",
+  chain: "sui:testnet",
+  displayName: "Sui Testnet",
+  network: "testnet",
+  suiExplorerUrl: "https://explorer.sui.io/txblock?network=testnet",
+  suiRpcUrl: "https://fullnode.testnet.sui.io:443",
 });
 
 export const ChainContext = createContext<ChainContext>(DEFAULT_CHAIN_CONFIG);

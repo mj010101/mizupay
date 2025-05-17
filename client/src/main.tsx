@@ -10,8 +10,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import WalletProviderWrapper from "./components/WalletProviderWrapper";
 import { Nav } from "./components/Nav.tsx";
 import { ChainContextProvider } from "./context/ChainContextProvider.tsx";
-import { RpcContextProvider } from "./context/RpcContextProvider.tsx";
-import { SelectedWalletAccountContextProvider } from "./context/SelectedWalletAccountContextProvider.tsx";
 import Root from "./routes/root.tsx";
 import Mint from "./routes/mint.tsx";
 import Earn from "./routes/earn.tsx";

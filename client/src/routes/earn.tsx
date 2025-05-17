@@ -62,7 +62,7 @@ function Earn() {
                 color: "var(--gray-11)",
               }}
             >
-              Stake your zUSD to receive szUSD tokens and earn yield over time.
+              Stake your LUSD to receive sLUSD tokens and earn yield over time.
               Your funds are distributed across multiple high-performing vaults.
             </Text>
           </Flex>

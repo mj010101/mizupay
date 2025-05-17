@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/themes";
 import { useContext, useState, useEffect } from "react";
 import { FeaturePanel } from "./FeaturePanel";
-import { SelectedWalletAccountContext } from "../context/SelectedWalletAccountContext";
+import { useWallet } from "@suiet/wallet-kit";
 import { tokenIcons } from "../config";
 
 const fetchBTCPrice = async (): Promise<number> => {
@@ -21,7 +21,7 @@ const fetchBTCPrice = async (): Promise<number> => {
 };
 
 export function LockAndMintPanel() {
-  const [selectedWalletAccount] = useContext(SelectedWalletAccountContext);
+  const { connected, address } = useWallet();
   const [btcAmount, setBtcAmount] = useState("");
   const [usdAmount, setUsdAmount] = useState("");
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
@@ -51,7 +51,7 @@ export function LockAndMintPanel() {
   }, [btcAmount, btcPrice]);
 
   const handleLockAndMint = async () => {
-    if (!selectedWalletAccount) {
+    if (!connected) {
       alert("Please connect your wallet first");
       return;
     }
@@ -59,7 +59,7 @@ export function LockAndMintPanel() {
     setIsProcessing(true);
     try {
       console.log(
-        `Locking ${btcAmount} zBTC as collateral and minting ${usdAmount} zUSD`,
+        `Locking ${btcAmount} LBTC as collateral and minting ${usdAmount} LUSD`,
       );
 
       await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -67,7 +67,7 @@ export function LockAndMintPanel() {
       setBtcAmount("");
       setUsdAmount("");
       alert(
-        `Successfully locked ${btcAmount} zBTC and minted ${usdAmount} zUSD`,
+        `Successfully locked ${btcAmount} LBTC and minted ${usdAmount} LUSD`,
       );
     } catch (error: unknown) {
       console.error("Operation failed:", error);
@@ -80,7 +80,7 @@ export function LockAndMintPanel() {
   };
 
   return (
-    <FeaturePanel label="Lock & Mint">
+    <FeaturePanel>
       <Card
         style={{
           width: "100%",
@@ -127,7 +127,7 @@ export function LockAndMintPanel() {
                     border: "1px solid rgba(59, 130, 246, 0.2)",
                   }}
                 >
-                  {tokenIcons.zBTC.endsWith(".svg") ? (
+                  {tokenIcons.LBTC.endsWith(".svg") ? (
                     <img
                       src={tokenIcons.LBTC}
                       alt="LBTC"
@@ -143,11 +143,11 @@ export function LockAndMintPanel() {
                       weight="medium"
                       style={{ marginRight: "8px" }}
                     >
-                      {tokenIcons.zBTC}
+                      {tokenIcons.LBTC}
                     </Text>
                   )}
                   <Text size="3" weight="medium">
-                    zBTC
+                    LBTC
                   </Text>
                 </Box>
                 <TextField.Root
@@ -187,7 +187,7 @@ export function LockAndMintPanel() {
                 weight="bold"
                 style={{ color: "var(--indigo-11)" }}
               >
-                Mint zUSD (70% LTV)
+                Mint LUSD (70% LTV)
               </Text>
               <Flex gap="2" align="center">
                 <Box
@@ -205,7 +205,7 @@ export function LockAndMintPanel() {
                   {tokenIcons.zUSD.endsWith(".svg") ? (
                     <img
                       src={tokenIcons.zUSD}
-                      alt="zUSD"
+                      alt="LUSD"
                       style={{
                         width: "20px",
                         height: "20px",
@@ -222,7 +222,7 @@ export function LockAndMintPanel() {
                     </Text>
                   )}
                   <Text size="3" weight="medium">
-                    zUSD
+                    LUSD
                   </Text>
                 </Box>
                 <TextField.Root
@@ -261,14 +261,14 @@ export function LockAndMintPanel() {
             disabled={
               !btcAmount ||
               parseFloat(btcAmount) <= 0 ||
-              !selectedWalletAccount ||
+              !connected ||
               isProcessing
             }
             onMouseEnter={(e) => {
               if (
                 btcAmount &&
                 parseFloat(btcAmount) > 0 &&
-                selectedWalletAccount &&
+                connected &&
                 !isProcessing
               ) {
                 e.currentTarget.style.transform = "translateY(-2px)";
@@ -284,7 +284,7 @@ export function LockAndMintPanel() {
           >
             {isProcessing
               ? "Processing..."
-              : selectedWalletAccount
+              : connected
               ? "Lock & Mint"
               : "Connect Wallet to Lock & Mint"}
           </Button>
