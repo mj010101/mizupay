@@ -77,7 +77,7 @@ function AssetCard({
             size="2"
             weight="bold"
             style={{
-              color: "#162E2F",
+              color: "#F1F7F7",
               textTransform: "uppercase",
               letterSpacing: "0.05em",
             }}
@@ -106,7 +106,7 @@ function AssetCard({
             <Text
               size="2"
               style={{
-                color: "var(--gray-11)",
+                color: "#CEE3E4",
                 alignSelf: "flex-end",
                 marginBottom: "7px",
               }}
@@ -211,7 +211,7 @@ function VaultCard({
         </Flex>
         <Box>
           <Flex justify="between" mb="1">
-            <Text size="2" style={{ color: "var(--gray-12)" }}>
+            <Text size="2" style={{ color: "#F1F7F7" }}>
               Allocation
             </Text>
             <Text size="2" weight="bold" style={{ color: color }}>
@@ -238,7 +238,7 @@ function VaultCard({
         </Box>
         <Grid columns="2" gap="3" mt="2">
           <Box>
-            <Text size="2" style={{ color: "var(--gray-12)" }}>
+            <Text size="2" style={{ color: "#F1F7F7" }}>
               APY
             </Text>
             <Text size="3" weight="bold" style={{ color: color }}>
@@ -246,10 +246,10 @@ function VaultCard({
             </Text>
           </Box>
           <Box>
-            <Text size="2" style={{ color: "var(--gray-12)" }}>
+            <Text size="2" style={{ color: "#F1F7F7" }}>
               Amount
             </Text>
-            <Text size="3" weight="bold" style={{ color: "var(--gray-12)" }}>
+            <Text size="3" weight="bold" style={{ color: "#F1F7F7" }}>
               {amount}
             </Text>
           </Box>
@@ -273,7 +273,7 @@ function Dashboard() {
     <Box
       style={{
         background: "linear-gradient(135deg, var(--gray-2), var(--gray-1))",
-        color: "#162E2F",
+        color: "#F1F7F7",
         minHeight: "100vh",
       }}
     >
@@ -400,7 +400,7 @@ function Dashboard() {
               size="3"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(77, 162, 255, 0.1) 0%, rgba(99, 201, 185, 0.2) 100%)",
+                  "linear-gradient(135deg, rgba(22, 46, 47, 0.9), rgba(1, 24, 41, 0.8))",
                 border: "1px solid rgba(77, 162, 255, 0.15)",
                 boxShadow:
                   "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)",
@@ -425,16 +425,14 @@ function Dashboard() {
                 >
                   {yieldData.totalYield}
                 </Heading>
-                <Text style={{ color: "var(--gray-12)" }}>
-                  Since January 2025
-                </Text>
+                <Text style={{ color: "#F1F7F7" }}>Since January 2025</Text>
               </Flex>
             </Card>
             <Card
               size="3"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(77, 162, 255, 0.1) 0%, rgba(99, 201, 185, 0.2) 100%)",
+                  "linear-gradient(135deg, rgba(22, 46, 47, 0.9), rgba(1, 24, 41, 0.8))",
                 border: "1px solid rgba(77, 162, 255, 0.15)",
                 boxShadow:
                   "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)",
@@ -490,7 +488,7 @@ function Dashboard() {
             <Text
               size="3"
               style={{
-                color: "var(--gray-12)",
+                color: "#F1F7F7",
               }}
             >
               Your staked LUSD is distributed across multiple vaults to optimize
@@ -512,11 +510,7 @@ function Dashboard() {
                 }}
               >
                 <Flex direction="column" gap="3">
-                  <Text
-                    size="2"
-                    weight="bold"
-                    style={{ color: "var(--gray-12)" }}
-                  >
+                  <Text size="2" weight="bold" style={{ color: "#F1F7F7" }}>
                     Relative Allocation
                   </Text>
                   <Box>
@@ -558,19 +552,19 @@ function Dashboard() {
                         </Box>
 
                         <Flex justify="between" mt="3">
-                          <Text size="1" style={{ color: "var(--gray-12)" }}>
+                          <Text size="1" style={{ color: "#F1F7F7" }}>
                             0%
                           </Text>
-                          <Text size="1" style={{ color: "var(--gray-12)" }}>
+                          <Text size="1" style={{ color: "#F1F7F7" }}>
                             25%
                           </Text>
-                          <Text size="1" style={{ color: "var(--gray-12)" }}>
+                          <Text size="1" style={{ color: "#F1F7F7" }}>
                             50%
                           </Text>
-                          <Text size="1" style={{ color: "var(--gray-12)" }}>
+                          <Text size="1" style={{ color: "#F1F7F7" }}>
                             75%
                           </Text>
-                          <Text size="1" style={{ color: "var(--gray-12)" }}>
+                          <Text size="1" style={{ color: "#F1F7F7" }}>
                             100%
                           </Text>
                         </Flex>
@@ -618,7 +612,7 @@ function Dashboard() {
                         </Flex>
                       </>
                     ) : (
-                      <Text style={{ color: "var(--gray-12)" }}>
+                      <Text style={{ color: "#F1F7F7" }}>
                         Connect wallet to view allocation distribution
                       </Text>
                     )}

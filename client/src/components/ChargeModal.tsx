@@ -72,7 +72,7 @@ export function ChargeModal({
                     flex: 1,
                     background:
                       destination === "card"
-                        ? "linear-gradient(45deg, var(--jade-9), var(--mint-9))"
+                        ? "linear-gradient(45deg, #63C9B9, #2E5A5A)"
                         : "var(--gray-3)",
                     color: destination === "card" ? "white" : "var(--gray-11)",
                     border:
@@ -93,7 +93,7 @@ export function ChargeModal({
                     flex: 1,
                     background:
                       destination === "eoa"
-                        ? "linear-gradient(45deg, var(--jade-9), var(--mint-9))"
+                        ? "linear-gradient(45deg, #63C9B9, #2E5A5A)"
                         : "var(--gray-3)",
                     color: destination === "eoa" ? "white" : "var(--gray-11)",
                     border:
@@ -122,8 +122,7 @@ export function ChargeModal({
               onClick={handleCharge}
               disabled={!amount || parseFloat(amount) <= 0 || isProcessing}
               style={{
-                background:
-                  "linear-gradient(45deg, var(--jade-9), var(--mint-9))",
+                background: "linear-gradient(45deg, #63C9B9, #2E5A5A)",
                 color: "white",
               }}
             >

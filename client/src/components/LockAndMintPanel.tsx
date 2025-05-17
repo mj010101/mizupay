@@ -84,8 +84,8 @@ export function LockAndMintPanel() {
       <Card
         style={{
           width: "100%",
-          background: "rgba(25, 25, 28, 0.8)",
-          border: "1px solid rgba(99, 102, 241, 0.3)",
+          background: "rgba(1, 24, 41, 0.8)",
+          border: "1px solid rgba(77, 162, 255, 0.3)",
           borderRadius: "20px",
           padding: "32px",
           boxShadow:
@@ -110,7 +110,7 @@ export function LockAndMintPanel() {
                 as="label"
                 size="3"
                 weight="bold"
-                style={{ color: "var(--indigo-11)" }}
+                style={{ color: "#4DA2FF" }}
               >
                 Lock LBTC as Collateral
               </Text>
@@ -122,9 +122,9 @@ export function LockAndMintPanel() {
                     alignItems: "center",
                     justifyContent: "center",
                     padding: "10px 12px",
-                    background: "rgba(59, 130, 246, 0.1)",
+                    background: "rgba(77, 162, 255, 0.1)",
                     borderRadius: "8px",
-                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    border: "1px solid rgba(77, 162, 255, 0.2)",
                   }}
                 >
                   {tokenIcons.LBTC.endsWith(".svg") ? (
@@ -162,7 +162,7 @@ export function LockAndMintPanel() {
                 />
               </Flex>
               {btcPrice && (
-                <Text size="2" style={{ color: "var(--gray-9)" }}>
+                <Text size="2" style={{ color: "#CEE3E4" }}>
                   1 BTC = ${btcPrice.toFixed(2)} USD
                 </Text>
               )}
@@ -185,7 +185,7 @@ export function LockAndMintPanel() {
                 as="label"
                 size="3"
                 weight="bold"
-                style={{ color: "var(--indigo-11)" }}
+                style={{ color: "#4DA2FF" }}
               >
                 Mint LUSD (70% LTV)
               </Text>
@@ -197,9 +197,9 @@ export function LockAndMintPanel() {
                     alignItems: "center",
                     justifyContent: "center",
                     padding: "10px 12px",
-                    background: "rgba(16, 185, 129, 0.1)",
+                    background: "rgba(99, 201, 185, 0.1)",
                     borderRadius: "8px",
-                    border: "1px solid rgba(16, 185, 129, 0.2)",
+                    border: "1px solid rgba(99, 201, 185, 0.2)",
                   }}
                 >
                   {tokenIcons.LUSD.endsWith(".svg") ? (
@@ -234,7 +234,7 @@ export function LockAndMintPanel() {
                   size="3"
                 />
               </Flex>
-              <Text size="2" style={{ color: "var(--gray-9)" }}>
+              <Text size="2" style={{ color: "#CEE3E4" }}>
                 LTV Ratio: 70%
               </Text>
             </Flex>
@@ -247,11 +247,10 @@ export function LockAndMintPanel() {
             size="4"
             style={{
               width: "100%",
-              background:
-                "linear-gradient(45deg, var(--indigo-9), var(--purple-9))",
+              background: "linear-gradient(45deg, #4DA2FF, #63C9B9)",
               borderRadius: "24px",
               color: "white",
-              boxShadow: "0 4px 14px rgba(79, 70, 229, 0.4)",
+              boxShadow: "0 4px 14px rgba(77, 162, 255, 0.4)",
               transition: "transform 0.2s, box-shadow 0.2s",
               fontSize: "16px",
               padding: "0 20px",
@@ -273,13 +272,13 @@ export function LockAndMintPanel() {
               ) {
                 e.currentTarget.style.transform = "translateY(-2px)";
                 e.currentTarget.style.boxShadow =
-                  "0 6px 20px rgba(79, 70, 229, 0.5)";
+                  "0 6px 20px rgba(77, 162, 255, 0.5)";
               }
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "none";
               e.currentTarget.style.boxShadow =
-                "0 4px 14px rgba(79, 70, 229, 0.4)";
+                "0 4px 14px rgba(77, 162, 255, 0.4)";
             }}
           >
             {isProcessing

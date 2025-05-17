@@ -107,8 +107,8 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
         style={{
           maxWidth: "450px",
           width: "100%",
-          background: "rgba(25, 25, 28, 0.8)",
-          border: "1px solid rgba(99, 102, 241, 0.3)",
+          background: "rgba(1, 24, 41, 0.8)",
+          border: "1px solid rgba(77, 162, 255, 0.3)",
           borderRadius: "20px",
           padding: "32px",
           boxShadow:
@@ -154,7 +154,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
               as="label"
               size="3"
               weight="bold"
-              style={{ color: "var(--indigo-11)" }}
+              style={{ color: "#4DA2FF" }}
             >
               From
             </Text>
@@ -223,7 +223,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
               as="label"
               size="3"
               weight="bold"
-              style={{ color: "var(--indigo-11)" }}
+              style={{ color: "#4DA2FF" }}
             >
               To
             </Text>
@@ -286,7 +286,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
           </Box>
 
           <Box style={{ marginTop: "12px" }}>
-            <Text size="2" style={{ color: "var(--gray-9)" }}>
+            <Text size="2" style={{ color: "#CEE3E4" }}>
               Rate: 1 {fromToken} = {getRate()} {toToken}
             </Text>
           </Box>
@@ -299,11 +299,10 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
               !amount || !selectedWalletAccount || isSwapping || !toToken
             }
             style={{
-              background:
-                "linear-gradient(45deg, var(--indigo-9), var(--purple-9))",
+              background: "linear-gradient(45deg, #4DA2FF, #63C9B9)",
               borderRadius: "24px",
               color: "white",
-              boxShadow: "0 4px 14px rgba(79, 70, 229, 0.4)",
+              boxShadow: "0 4px 14px rgba(77, 162, 255, 0.4)",
               transition: "transform 0.2s, box-shadow 0.2s",
               marginTop: "16px",
               fontSize: "16px",
@@ -314,13 +313,13 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
               if (amount && selectedWalletAccount && !isSwapping && toToken) {
                 e.currentTarget.style.transform = "translateY(-2px)";
                 e.currentTarget.style.boxShadow =
-                  "0 6px 20px rgba(79, 70, 229, 0.5)";
+                  "0 6px 20px rgba(77, 162, 255, 0.5)";
               }
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "none";
               e.currentTarget.style.boxShadow =
-                "0 4px 14px rgba(79, 70, 229, 0.4)";
+                "0 4px 14px rgba(77, 162, 255, 0.4)";
             }}
           >
             {isSwapping

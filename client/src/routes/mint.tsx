@@ -6,8 +6,9 @@ function Mint() {
   return (
     <Box
       style={{
-        background: "linear-gradient(135deg, var(--indigo-1), var(--purple-1))",
-        color: "var(--gray-12)",
+        background:
+          "linear-gradient(135deg, rgba(1, 24, 41, 0.8), rgba(22, 46, 47, 0.8))",
+        color: "#F1F7F7",
         minHeight: "calc(100vh - 80px)",
         display: "flex",
         flexDirection: "column",
@@ -18,7 +19,7 @@ function Mint() {
         size="3"
         style={{
           background:
-            "linear-gradient(135deg, var(--indigo-2), var(--purple-2))",
+            "linear-gradient(135deg, rgba(22, 46, 47, 0.9), rgba(1, 24, 41, 0.9))",
           paddingTop: "40px",
           paddingBottom: "40px",
         }}
@@ -28,8 +29,7 @@ function Mint() {
             as="h1"
             size="8"
             style={{
-              background:
-                "linear-gradient(90deg, var(--indigo-11), var(--purple-11))",
+              background: "linear-gradient(90deg, #4DA2FF, #63C9B9)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -51,7 +51,7 @@ function Mint() {
             <Heading
               size="5"
               style={{
-                color: "var(--indigo-10)",
+                color: "#4DA2FF",
               }}
             >
               Lock & Mint Assets
@@ -59,7 +59,7 @@ function Mint() {
             <Text
               size="3"
               style={{
-                color: "var(--gray-11)",
+                color: "#CEE3E4",
               }}
             >
               Lock your LBTC as collateral and mint LUSD tokens. Your LBTC will
