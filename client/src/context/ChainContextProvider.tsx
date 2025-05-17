@@ -1,57 +1,87 @@
-import { mainnet, testnet } from '@solana/kit';
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from "react";
+import { ChainContext, DEFAULT_CHAIN_CONFIG, SuiRpcUrl } from "./ChainContext";
 
-import { ChainContext, DEFAULT_CHAIN_CONFIG } from './ChainContext';
+const STORAGE_KEY = "sui-app:selected-chain";
 
-const STORAGE_KEY = 'solana-example-react-app:selected-chain';
+function getSuiRpcUrl(network: string): SuiRpcUrl {
+  switch (network) {
+    case "mainnet":
+      return "https://fullnode.mainnet.sui.io:443";
+    case "testnet":
+      return "https://fullnode.testnet.sui.io:443";
+    case "localnet":
+      return "http://127.0.0.1:9000";
+    case "devnet":
+    default:
+      return "https://fullnode.devnet.sui.io:443";
+  }
+}
 
-export function ChainContextProvider({ children }: { children: React.ReactNode }) {
-    const [chain, setChain] = useState(() => localStorage.getItem(STORAGE_KEY) ?? 'solana:devnet');
-    const contextValue = useMemo<ChainContext>(() => {
-        switch (chain) {
-            // @ts-expect-error Intentional fall through
-            case 'solana:mainnet':
-                if (process.env.REACT_EXAMPLE_APP_ENABLE_MAINNET === 'true') {
-                    return {
-                        chain: 'solana:mainnet',
-                        displayName: 'Mainnet Beta',
-                        solanaExplorerClusterName: 'mainnet-beta',
-                        solanaRpcSubscriptionsUrl: mainnet('wss://api.mainnet-beta.solana.com'),
-                        solanaRpcUrl: mainnet('https://api.mainnet-beta.solana.com'),
-                    };
-                }
-            // falls through
-            case 'solana:testnet':
-                return {
-                    chain: 'solana:testnet',
-                    displayName: 'Testnet',
-                    solanaExplorerClusterName: 'testnet',
-                    solanaRpcSubscriptionsUrl: testnet('wss://api.testnet.solana.com'),
-                    solanaRpcUrl: testnet('https://api.testnet.solana.com'),
-                };
-            case 'solana:devnet':
-            default:
-                if (chain !== 'solana:devnet') {
-                    localStorage.removeItem(STORAGE_KEY);
-                    console.error(`Unrecognized chain \`${chain}\``);
-                }
-                return DEFAULT_CHAIN_CONFIG;
+function getSuiExplorerUrl(network: string): string {
+  const baseUrl = "https://explorer.sui.io";
+  if (network === "localnet") {
+    return "http://localhost:8080";
+  }
+  return `${baseUrl}/txblock?network=${network}`;
+}
+
+export function ChainContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [chain, setChain] = useState(
+    () => localStorage.getItem(STORAGE_KEY) ?? "sui:devnet",
+  );
+  const contextValue = useMemo<ChainContext>(() => {
+    switch (chain) {
+      case "sui:mainnet":
+        return {
+          chain: "sui:mainnet",
+          displayName: "Sui Mainnet",
+          network: "mainnet",
+          suiExplorerUrl: getSuiExplorerUrl("mainnet"),
+          suiRpcUrl: getSuiRpcUrl("mainnet"),
+        };
+      case "sui:testnet":
+        return {
+          chain: "sui:testnet",
+          displayName: "Sui Testnet",
+          network: "testnet",
+          suiExplorerUrl: getSuiExplorerUrl("testnet"),
+          suiRpcUrl: getSuiRpcUrl("testnet"),
+        };
+      case "sui:localnet":
+        return {
+          chain: "sui:localnet",
+          displayName: "Sui Localnet",
+          network: "localnet",
+          suiExplorerUrl: getSuiExplorerUrl("localnet"),
+          suiRpcUrl: getSuiRpcUrl("localnet"),
+        };
+      case "sui:devnet":
+      default:
+        if (chain !== "sui:devnet") {
+          localStorage.removeItem(STORAGE_KEY);
+          console.error(`인식할 수 없는 체인 \`${chain}\``);
         }
-    }, [chain]);
-    return (
-        <ChainContext.Provider
-            value={useMemo(
-                () => ({
-                    ...contextValue,
-                    setChain(chain) {
-                        localStorage.setItem(STORAGE_KEY, chain);
-                        setChain(chain);
-                    },
-                }),
-                [contextValue],
-            )}
-        >
-            {children}
-        </ChainContext.Provider>
-    );
+        return DEFAULT_CHAIN_CONFIG;
+    }
+  }, [chain]);
+  return (
+    <ChainContext.Provider
+      value={useMemo(
+        () => ({
+          ...contextValue,
+          setChain(chain) {
+            localStorage.setItem(STORAGE_KEY, chain);
+            setChain(chain);
+          },
+        }),
+        [contextValue],
+      )}
+    >
+      {children}
+    </ChainContext.Provider>
+  );
 }

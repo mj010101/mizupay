@@ -1,22 +1,27 @@
-import type { ClusterUrl } from "@solana/kit";
-import { devnet } from "@solana/kit";
 import { createContext } from "react";
 
+// Sui 네트워크 유형
+export type SuiNetwork = "mainnet" | "testnet" | "devnet" | "localnet";
+
+// Sui RPC URL 유형
+export type SuiRpcUrl = `http://${string}` | `https://${string}`;
+
 export type ChainContext = Readonly<{
-  chain: `solana:${string}`;
+  chain: `sui:${string}`;
   displayName: string;
-  setChain?(chain: `solana:${string}`): void;
-  solanaExplorerClusterName: "devnet" | "mainnet-beta" | "testnet";
-  solanaRpcSubscriptionsUrl: ClusterUrl;
-  solanaRpcUrl: ClusterUrl;
+  setChain?(chain: `sui:${string}`): void;
+  suiExplorerUrl: string;
+  suiRpcUrl: SuiRpcUrl;
+  network: SuiNetwork;
 }>;
 
+// Sui 기본 체인 설정
 export const DEFAULT_CHAIN_CONFIG = Object.freeze({
-  chain: "solana:devnet",
-  displayName: "Devnet",
-  solanaExplorerClusterName: "devnet",
-  solanaRpcSubscriptionsUrl: devnet("wss://api.devnet.solana.com"),
-  solanaRpcUrl: devnet("https://api.devnet.solana.com"),
+  chain: "sui:devnet",
+  displayName: "Sui Devnet",
+  network: "devnet",
+  suiExplorerUrl: "https://explorer.sui.io/txblock?network=devnet",
+  suiRpcUrl: "https://fullnode.devnet.sui.io:443",
 });
 
 export const ChainContext = createContext<ChainContext>(DEFAULT_CHAIN_CONFIG);

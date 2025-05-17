@@ -13,12 +13,14 @@
     "test:typecheck": "tsc"
   },
   "dependencies": {
+    "@mysten/sui": "^1.29.1",
     "@radix-ui/react-dropdown-menu": "2.1.6",
     "@radix-ui/react-icons": "1.3.2",
     "@radix-ui/themes": "3.2.1",
     "@solana-program/system": "^0.7.0",
     "@solana/kit": "^2.1.0",
     "@solana/react": "^2.1.0",
+    "@suiet/wallet-kit": "^0.4.1",
     "@wallet-standard/core": "^1.1.0",
     "@wallet-standard/react": "^1.0.0",
     "react": "^19",

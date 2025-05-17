@@ -2,7 +2,7 @@ import { Badge, Box, DropdownMenu, Flex, Heading } from "@radix-ui/themes";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { ChainContext } from "../context/ChainContext";
-import { ConnectWalletMenu } from "./ConnectWalletMenu";
+import { ConnectButton } from "@suiet/wallet-kit";
 
 export function Nav() {
   const {
@@ -43,12 +43,18 @@ export function Nav() {
                 <DropdownMenu.Content>
                   <DropdownMenu.RadioGroup
                     onValueChange={(value) => {
-                      setChain(value as "solana:${string}");
+                      setChain(value as `sui:${string}`);
                     }}
                     value={chain}
                   >
-                    <DropdownMenu.RadioItem value="solana:devnet">
-                      Devnet
+                    <DropdownMenu.RadioItem value="sui:devnet">
+                      Sui Devnet
+                    </DropdownMenu.RadioItem>
+                    <DropdownMenu.RadioItem value="sui:testnet">
+                      Sui Testnet
+                    </DropdownMenu.RadioItem>
+                    <DropdownMenu.RadioItem value="sui:mainnet">
+                      Sui Mainnet
                     </DropdownMenu.RadioItem>
                   </DropdownMenu.RadioGroup>
                 </DropdownMenu.Content>
@@ -114,7 +120,7 @@ export function Nav() {
           </Flex>
 
           <Flex gap="2">
-            <ConnectWalletMenu>Connect Wallet</ConnectWalletMenu>
+            <ConnectButton />
           </Flex>
         </Flex>
       </Flex>
