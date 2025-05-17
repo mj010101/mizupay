@@ -35,19 +35,19 @@ export const useDashboardData = () => {
       percentage: isConnected ? 45 : 0,
       apy: isConnected ? "16.8%" : "-",
       amount: isConnected ? "$3,741" : "-",
-      color: "var(--indigo-11)",
+      color: "#4DA2FF",
     },
     kamino: {
       percentage: isConnected ? 35 : 0,
       apy: isConnected ? "14.5%" : "-",
       amount: isConnected ? "$2,912" : "-",
-      color: "var(--purple-11)",
+      color: "#63C9B9",
     },
     LUSDPool: {
       percentage: isConnected ? 20 : 0,
       apy: isConnected ? "12.3%" : "-",
       amount: isConnected ? "$1,664" : "-",
-      color: "var(--violet-11)",
+      color: "#2E5A5A",
     },
   };
 

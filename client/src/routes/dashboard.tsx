@@ -42,8 +42,8 @@ function AssetCard({
       style={{
         minWidth: "180px",
         background:
-          "linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.2) 100%)",
-        border: "1px solid rgba(99, 102, 241, 0.15)",
+          "linear-gradient(135deg, rgba(77, 162, 255, 0.1) 0%, rgba(99, 201, 185, 0.2) 100%)",
+        border: "1px solid rgba(77, 162, 255, 0.15)",
         boxShadow:
           "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)",
         transition: "transform 0.2s, box-shadow 0.2s",
@@ -68,8 +68,7 @@ function AssetCard({
           left: 0,
           right: 0,
           height: "4px",
-          background:
-            "linear-gradient(90deg, var(--indigo-9) 0%, var(--purple-9) 100%)",
+          background: "linear-gradient(90deg, #4DA2FF 0%, #63C9B9 100%)",
         }}
       />
       <Flex direction="column" gap="2" style={{ padding: "8px 0" }}>
@@ -78,18 +77,14 @@ function AssetCard({
             size="2"
             weight="bold"
             style={{
-              color: "var(--gray-12)",
+              color: "#162E2F",
               textTransform: "uppercase",
               letterSpacing: "0.05em",
             }}
           >
             {label}
           </Text>
-          <IconButton
-            size="1"
-            variant="ghost"
-            style={{ color: "var(--indigo-9)" }}
-          >
+          <IconButton size="1" variant="ghost" style={{ color: "#4DA2FF" }}>
             <InfoCircledIcon />
           </IconButton>
         </Flex>
@@ -98,8 +93,7 @@ function AssetCard({
             size="8"
             weight="bold"
             style={{
-              background:
-                "linear-gradient(90deg, var(--indigo-9), var(--purple-9))",
+              background: "linear-gradient(90deg, #4DA2FF, #63C9B9)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               marginBottom: "4px",
@@ -125,7 +119,7 @@ function AssetCard({
           <Text
             size="2"
             style={{
-              color: isPositive ? "var(--jade-11)" : "var(--tomato-11)",
+              color: isPositive ? "#63C9B9" : "var(--tomato-11)",
               fontWeight: "medium",
             }}
           >
@@ -165,7 +159,7 @@ function VaultCard({
   return (
     <Card
       style={{
-        background: "rgba(25, 25, 28, 0.8)",
+        background: "rgba(1, 24, 41, 0.8)",
         border: `1px solid ${color}`,
         borderRadius: "16px",
         padding: "24px",
@@ -279,7 +273,7 @@ function Dashboard() {
     <Box
       style={{
         background: "linear-gradient(135deg, var(--gray-2), var(--gray-1))",
-        color: "var(--gray-12)",
+        color: "#162E2F",
         minHeight: "100vh",
       }}
     >
@@ -297,8 +291,7 @@ function Dashboard() {
               as="h1"
               size="8"
               style={{
-                background:
-                  "linear-gradient(90deg, var(--indigo-11), var(--purple-11))",
+                background: "linear-gradient(90deg, #4DA2FF, #63C9B9)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -309,11 +302,10 @@ function Dashboard() {
               size="3"
               disabled={isButtonDisabled}
               style={{
-                background:
-                  "linear-gradient(45deg, var(--jade-9), var(--mint-9))",
+                background: "linear-gradient(45deg, #63C9B9, #2E5A5A)",
                 borderRadius: "20px",
                 color: "white",
-                boxShadow: "0 4px 14px rgba(0, 160, 120, 0.4)",
+                boxShadow: "0 4px 14px rgba(99, 201, 185, 0.4)",
                 transition: "transform 0.2s, box-shadow 0.2s",
                 opacity: isButtonDisabled ? "0.5" : "1",
                 cursor: isButtonDisabled ? "not-allowed" : "pointer",
@@ -322,14 +314,14 @@ function Dashboard() {
                 if (!isButtonDisabled) {
                   e.currentTarget.style.transform = "translateY(-2px)";
                   e.currentTarget.style.boxShadow =
-                    "0 6px 20px rgba(0, 160, 120, 0.5)";
+                    "0 6px 20px rgba(99, 201, 185, 0.5)";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isButtonDisabled) {
                   e.currentTarget.style.transform = "none";
                   e.currentTarget.style.boxShadow =
-                    "0 4px 14px rgba(0, 160, 120, 0.4)";
+                    "0 4px 14px rgba(99, 201, 185, 0.4)";
                 }
               }}
               onClick={isButtonDisabled ? undefined : handleOpenChargeModal}
@@ -353,7 +345,7 @@ function Dashboard() {
             size="5"
             style={{
               marginBottom: "24px",
-              color: "var(--indigo-10)",
+              color: "#4DA2FF",
             }}
           >
             My Assets
@@ -386,7 +378,7 @@ function Dashboard() {
         size="3"
         style={{
           background:
-            "linear-gradient(180deg, var(--indigo-1) 0%, var(--gray-1) 100%)",
+            "linear-gradient(180deg, rgba(192, 230, 255, 0.1) 0%, var(--gray-1) 100%)",
           paddingTop: "40px",
           paddingBottom: "40px",
           borderTop: "1px solid rgba(79, 70, 229, 0.1)",
@@ -398,7 +390,7 @@ function Dashboard() {
             size="5"
             style={{
               marginBottom: "24px",
-              color: "var(--indigo-10)",
+              color: "#4DA2FF",
             }}
           >
             Accumulated Yield
@@ -408,8 +400,8 @@ function Dashboard() {
               size="3"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.2) 100%)",
-                border: "1px solid rgba(99, 102, 241, 0.15)",
+                  "linear-gradient(135deg, rgba(77, 162, 255, 0.1) 0%, rgba(99, 201, 185, 0.2) 100%)",
+                border: "1px solid rgba(77, 162, 255, 0.15)",
                 boxShadow:
                   "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)",
               }}
@@ -418,7 +410,7 @@ function Dashboard() {
                 <Heading
                   size="4"
                   style={{
-                    color: "var(--indigo-11)",
+                    color: "#4DA2FF",
                   }}
                 >
                   Total Yield
@@ -426,8 +418,7 @@ function Dashboard() {
                 <Heading
                   size="8"
                   style={{
-                    background:
-                      "linear-gradient(90deg, var(--jade-9), var(--mint-9))",
+                    background: "linear-gradient(90deg, #4DA2FF, #63C9B9)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}
@@ -443,8 +434,8 @@ function Dashboard() {
               size="3"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.2) 100%)",
-                border: "1px solid rgba(99, 102, 241, 0.15)",
+                  "linear-gradient(135deg, rgba(77, 162, 255, 0.1) 0%, rgba(99, 201, 185, 0.2) 100%)",
+                border: "1px solid rgba(77, 162, 255, 0.15)",
                 boxShadow:
                   "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)",
               }}
@@ -453,7 +444,7 @@ function Dashboard() {
                 <Heading
                   size="4"
                   style={{
-                    color: "var(--indigo-11)",
+                    color: "#4DA2FF",
                   }}
                 >
                   Current APY
@@ -461,15 +452,14 @@ function Dashboard() {
                 <Heading
                   size="8"
                   style={{
-                    background:
-                      "linear-gradient(90deg, var(--indigo-9), var(--purple-9))",
+                    background: "linear-gradient(90deg, #4DA2FF, #63C9B9)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}
                 >
                   {yieldData.currentAPY}
                 </Heading>
-                <Text style={{ color: "var(--jade-11)" }}>
+                <Text style={{ color: "#63C9B9" }}>
                   {yieldData.changeFromLastMonth}
                 </Text>
               </Flex>
@@ -490,7 +480,7 @@ function Dashboard() {
             size="5"
             style={{
               marginBottom: "12px",
-              color: "var(--indigo-9)",
+              color: "#4DA2FF",
             }}
           >
             Staked LUSD Management
@@ -511,8 +501,8 @@ function Dashboard() {
               <Card
                 size="3"
                 style={{
-                  background: "rgba(25, 25, 28, 0.8)",
-                  border: "1px solid rgba(99, 102, 241, 0.3)",
+                  background: "rgba(1, 24, 41, 0.8)",
+                  border: "1px solid rgba(77, 162, 255, 0.3)",
                   borderRadius: "16px",
                   padding: "24px",
                   marginTop: "24px",
@@ -546,7 +536,7 @@ function Dashboard() {
                             style={{
                               height: "100%",
                               width: `${vaultData.drift.percentage}%`,
-                              background: "var(--indigo-11)",
+                              background: "#4DA2FF",
                               borderRadius: "10px 0 0 10px",
                             }}
                           />
@@ -554,14 +544,14 @@ function Dashboard() {
                             style={{
                               height: "100%",
                               width: `${vaultData.kamino.percentage}%`,
-                              background: "var(--purple-11)",
+                              background: "#63C9B9",
                             }}
                           />
                           <Box
                             style={{
                               height: "100%",
                               width: `${vaultData.LUSDPool.percentage}%`,
-                              background: "var(--violet-11)",
+                              background: "#2E5A5A",
                               borderRadius: "0 10px 10px 0",
                             }}
                           />
@@ -591,14 +581,11 @@ function Dashboard() {
                               style={{
                                 width: "10px",
                                 height: "10px",
-                                background: "var(--indigo-11)",
+                                background: "#4DA2FF",
                                 borderRadius: "2px",
                               }}
                             />
-                            <Text
-                              size="1"
-                              style={{ color: "var(--indigo-11)" }}
-                            >
+                            <Text size="1" style={{ color: "#4DA2FF" }}>
                               Drift ({vaultData.drift.percentage}%)
                             </Text>
                           </Flex>
@@ -607,14 +594,11 @@ function Dashboard() {
                               style={{
                                 width: "10px",
                                 height: "10px",
-                                background: "var(--purple-11)",
+                                background: "#63C9B9",
                                 borderRadius: "2px",
                               }}
                             />
-                            <Text
-                              size="1"
-                              style={{ color: "var(--purple-11)" }}
-                            >
+                            <Text size="1" style={{ color: "#63C9B9" }}>
                               Kamino ({vaultData.kamino.percentage}%)
                             </Text>
                           </Flex>
@@ -623,14 +607,11 @@ function Dashboard() {
                               style={{
                                 width: "10px",
                                 height: "10px",
-                                background: "var(--violet-11)",
+                                background: "#2E5A5A",
                                 borderRadius: "2px",
                               }}
                             />
-                            <Text
-                              size="1"
-                              style={{ color: "var(--violet-11)" }}
-                            >
+                            <Text size="1" style={{ color: "#2E5A5A" }}>
                               LUSD ({vaultData.LUSDPool.percentage}%)
                             </Text>
                           </Flex>

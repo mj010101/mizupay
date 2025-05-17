@@ -152,7 +152,7 @@ function Root() {
                   marginTop: "-8px",
                 }}
               >
-                Powered by LBTC
+                Powered by LBTC on Sui
               </Text>
 
               <Text
@@ -532,10 +532,10 @@ function Root() {
                     color: "var(--blue-9)",
                   }}
                 >
-                  Solana and Bitcoin Wallet Support
+                  Sui and Bitcoin Wallet Support
                 </Heading>
                 <Text style={{ color: "var(--gray-12)" }}>
-                  50+ Solana and Bitcoin Wallets Supported
+                  20+ Sui and Bitcoin Wallets Supported
                 </Text>
               </Flex>
             </Card>
