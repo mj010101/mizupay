@@ -1,9 +1,10 @@
-# Z-Fubao: Solana DeFi Protocol
+# SuiFuBao: Sui BTC PayFi Protocol
 
-Z-Fubao is a decentralized finance (DeFi) protocol built on Solana that enables users to:
+SuiFuBao is a DeFi protocol built on Sui that enables users to:
 
-1. Deposit ZBTC as collateral to mint ZUSD stablecoins
-2. Stake ZUSD tokens to receive SZUSD which is yield-bearing stablecoin
+1. Deposit LBTC as collateral to mint LUSD stablecoins
+2. Stake LUSD tokens to receive sLUSD which is yield-bearing stablecoin
+3. Use the yield to claim USDC upfront and use in payment
 
 ## Protocol Overview
 
@@ -11,16 +12,16 @@ Z-Fubao is a decentralized finance (DeFi) protocol built on Solana that enables 
 
 The vault program allows users to:
 
-- Deposit ZBTC as collateral and mint ZUSD stablecoins at a 70% loan-to-value ratio
-- Repay ZUSD to unlock and withdraw their ZBTC collateral
+- Deposit LBTC as collateral and mint LUSD stablecoins at a 70% loan-to-value ratio
+- Repay LUSD to unlock and withdraw their LBTC collateral
 - Maintain over-collateralization to prevent liquidation
 
 ### Staking Program
 
 The staking program enables users to:
 
-- Stake ZUSD tokens and receive SZUSD tokens 1:1
-- Unstake by burning SZUSD tokens to receive back their ZUSD
+- Stake LUSD tokens and receive sLUSD tokens 1:1
+- Unstake by burning sLUSD tokens to receive back their LUSD
 
 ### Client Application
 
@@ -28,13 +29,14 @@ A web-based interface for interacting with the protocol, built with:
 
 - TypeScript
 - Vite
-- Modern frontend frameworks
+- React
+- Sui Wallet Kit
 
 ## Getting Started
 
 ### Prerequisites
 
-- Solana CLI tools
+- Sui CLI tools
 - Node.js 16+
 - pnpm package manager
 
@@ -42,68 +44,64 @@ A web-based interface for interacting with the protocol, built with:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/z-fubao.git
-cd z-fubao
+git clone https://github.com/yourusername/SuiFuBao.git
+cd SuiFuBao
 
-# Build Solana programs
-cd program/vault
-cargo build-bpf
-
-cd ../stake
-cargo build-bpf
+# Build Sui modules (once the Sui contracts are ready)
+# cd program/modules
+# sui move build
 
 # Set up the client application
-cd ../../client
+cd client
 pnpm install
 pnpm dev
 ```
 
 ## Usage
 
-### Minting ZUSD
+### Minting LUSD
 
 1. Connect your wallet through the client interface
-2. Navigate to the Vault section
-3. Deposit ZBTC as collateral
-4. Mint ZUSD tokens (up to 70% of your collateral value)
+2. Navigate to the Mint section
+3. Deposit LBTC as collateral
+4. Mint LUSD tokens (up to 70% of your collateral value)
 
-### Staking ZUSD
+### Staking LUSD
 
-1. Navigate to the Staking section
-2. Approve ZUSD for staking
-3. Stake your ZUSD to receive SZUSD tokens
-4. Unstake anytime by burning SZUSD tokens
+1. Navigate to the Earn section
+2. Approve LUSD for staking
+3. Stake your LUSD to receive sLUSD tokens
+4. Unstake anytime by burning sLUSD tokens
 
 ## Architecture
 
 ### Smart Contracts
 
-- `program/vault/src/lib.rs`: Handles collateral deposits, ZUSD minting, repayments
-- `program/stake/src/main.rs`: Manages ZUSD staking and SZUSD token distribution
+- Sui Move modules for vault and staking functionality
 
 ### Client
 
-The client application provides a user-friendly interface to interact with the Solana programs, handling:
+The client application provides a user-friendly interface to interact with the Sui modules, handling:
 
-- Wallet connections
+- Wallet connections via Sui Wallet Kit
 - Transaction building and signing
 - Real-time updates of user positions
 - Responsive UI for both desktop and mobile devices
 
 ## Development
 
-### Program Deployment
-
-```bash
-solana program deploy --program-id <PROGRAM_ID> target/deploy/vault.so
-solana program deploy --program-id <PROGRAM_ID> target/deploy/stake.so
-```
-
 ### Client Development
 
 ```bash
 cd client
-pnpm dev       # Start development server
+pnpm dev       # Start development server on port 8080
 pnpm build     # Build for production
 pnpm preview   # Preview production build
 ```
+
+### Features
+
+- **Dashboard**: View your assets, accumulated yield, and staked LUSD management
+- **Deposit**: Convert BTC to LBTC
+- **Mint**: Lock LBTC and mint LUSD
+- **Earn**: Stake LUSD to earn yield with sLUSD
