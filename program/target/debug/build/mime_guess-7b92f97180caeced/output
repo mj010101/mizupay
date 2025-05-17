@@ -1,1 +1,0 @@
-cargo:rustc-env=MIME_TYPES_GENERATED_PATH=/Users/minjun/Desktop/z-fubao-1/program/target/debug/build/mime_guess-7b92f97180caeced/out/mime_types_generated.rs
