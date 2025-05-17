@@ -6,18 +6,18 @@ export const useDashboardData = () => {
   const isConnected = !!account;
 
   const assetData = {
-    zBTC: {
+    LBTC: {
       value: isConnected ? "1.25 BTC" : "-",
       change: isConnected ? "0.05 BTC (4.2%)" : "-",
       isPositive: true,
       dollarValue: isConnected ? "$104,319" : undefined,
     },
-    zUSD: {
+    LUSD: {
       value: isConnected ? "$15,750" : "-",
       change: isConnected ? "$750 (5.0%)" : "-",
       isPositive: true,
     },
-    szUSD: {
+    sLUSD: {
       value: isConnected ? "$8,320" : "-",
       change: isConnected ? "$320 (4.0%)" : "-",
       isPositive: true,
@@ -43,7 +43,7 @@ export const useDashboardData = () => {
       amount: isConnected ? "$2,912" : "-",
       color: "var(--purple-11)",
     },
-    zUSDPool: {
+    LUSDPool: {
       percentage: isConnected ? 20 : 0,
       apy: isConnected ? "12.3%" : "-",
       amount: isConnected ? "$1,664" : "-",

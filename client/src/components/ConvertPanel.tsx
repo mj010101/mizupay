@@ -16,16 +16,16 @@ type TokenRates = {
   [key: string]: number;
 };
 
-type Mode = "btc" | "zusd";
+type Mode = "btc" | "lusd";
 
 const modeRatesMap: Record<Mode, TokenRates> = {
   btc: {
     "BTC-LBTC": 1,
     "LBTC-BTC": 1,
   },
-  zusd: {
-    "zUSD-szUSD": 1,
-    "szUSD-zUSD": 1,
+  lusd: {
+    "LUSD-sLUSD": 1,
+    "sLUSD-LUSD": 1,
   },
 };
 
@@ -49,13 +49,13 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
         setFromToken("LBTC");
         setToToken("BTC");
       }
-    } else if (mode === "zusd") {
+    } else if (mode === "lusd") {
       if (activeTab === "stake") {
-        setFromToken("zUSD");
-        setToToken("szUSD");
+        setFromToken("LUSD");
+        setToToken("sLUSD");
       } else {
-        setFromToken("szUSD");
-        setToToken("zUSD");
+        setFromToken("sLUSD");
+        setToToken("LUSD");
       }
     }
   }, [activeTab, mode]);

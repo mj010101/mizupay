@@ -67,7 +67,7 @@ function Earn() {
             </Text>
           </Flex>
           <Flex justify="center" width="100%">
-            <ConvertPanel mode="zusd" />
+            <ConvertPanel mode="lusd" />
           </Flex>
         </Container>
       </Section>

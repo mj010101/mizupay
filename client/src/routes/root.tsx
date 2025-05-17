@@ -256,7 +256,7 @@ function Root() {
                       fontWeight: "bold",
                     }}
                   >
-                    zBTC
+                    LBTC
                   </Text>
                 </Box>
 
@@ -297,7 +297,7 @@ function Root() {
                       fontWeight: "bold",
                     }}
                   >
-                    zUSD
+                    LUSD
                   </Text>
                 </Box>
 
@@ -498,7 +498,7 @@ function Root() {
                   Staking Rewards
                 </Heading>
                 <Text style={{ color: "var(--gray-12)" }}>
-                  Convert BTC to zBTC or zUSD to szUSD to earn staking rewards
+                  Convert BTC to LBTC or LUSD to sLUSD to earn staking rewards
                   up to 15%
                 </Text>
               </Flex>

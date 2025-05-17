@@ -35,7 +35,7 @@ export function ChargeModal({
         <Dialog.Title>Charge USDC</Dialog.Title>
         <Dialog.Description size="2" mb="4">
           Top-up USDC with the yield from your Bitcoin. The yield is
-          automatically converted to USDC from the zUSD pool.
+          automatically converted to USDC from the LUSD pool.
         </Dialog.Description>
 
         <Flex direction="column" gap="4">
@@ -47,7 +47,7 @@ export function ChargeModal({
               htmlFor="amount-input"
               mb="2"
             >
-              Amount (zUSD)
+              Amount (LUSD)
             </Text>
             <Box mt="2">
               <TextField.Root

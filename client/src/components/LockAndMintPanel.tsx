@@ -202,9 +202,9 @@ export function LockAndMintPanel() {
                     border: "1px solid rgba(16, 185, 129, 0.2)",
                   }}
                 >
-                  {tokenIcons.zUSD.endsWith(".svg") ? (
+                  {tokenIcons.LUSD.endsWith(".svg") ? (
                     <img
-                      src={tokenIcons.zUSD}
+                      src={tokenIcons.LUSD}
                       alt="LUSD"
                       style={{
                         width: "20px",
@@ -218,7 +218,7 @@ export function LockAndMintPanel() {
                       weight="medium"
                       style={{ marginRight: "8px" }}
                     >
-                      {tokenIcons.zUSD}
+                      {tokenIcons.LUSD}
                     </Text>
                   )}
                   <Text size="3" weight="medium">

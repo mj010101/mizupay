@@ -360,23 +360,23 @@ function Dashboard() {
           </Heading>
           <Grid columns={{ initial: "1", sm: "3" }} gap="6">
             <AssetCard
-              label="zBTC Balance"
-              value={assetData.zBTC.value}
-              change={assetData.zBTC.change}
-              isPositive={assetData.zBTC.isPositive}
-              dollarValue={assetData.zBTC.dollarValue}
+              label="LBTC Balance"
+              value={assetData.LBTC.value}
+              change={assetData.LBTC.change}
+              isPositive={assetData.LBTC.isPositive}
+              dollarValue={assetData.LBTC.dollarValue}
             />
             <AssetCard
-              label="zUSD Balance"
-              value={assetData.zUSD.value}
-              change={assetData.zUSD.change}
-              isPositive={assetData.zUSD.isPositive}
+              label="LUSD Balance"
+              value={assetData.LUSD.value}
+              change={assetData.LUSD.change}
+              isPositive={assetData.LUSD.isPositive}
             />
             <AssetCard
-              label="szUSD Balance"
-              value={assetData.szUSD.value}
-              change={assetData.szUSD.change}
-              isPositive={assetData.szUSD.isPositive}
+              label="sLUSD Balance"
+              value={assetData.sLUSD.value}
+              change={assetData.sLUSD.change}
+              isPositive={assetData.sLUSD.isPositive}
             />
           </Grid>
         </Container>
@@ -493,7 +493,7 @@ function Dashboard() {
               color: "var(--indigo-9)",
             }}
           >
-            Staked zUSD Management
+            Staked LUSD Management
           </Heading>
 
           <Flex direction="column" gap="40">
@@ -503,7 +503,7 @@ function Dashboard() {
                 color: "var(--gray-12)",
               }}
             >
-              Your staked zUSD is distributed across multiple vaults to optimize
+              Your staked LUSD is distributed across multiple vaults to optimize
               yield and minimize risk.
             </Text>
 
@@ -560,7 +560,7 @@ function Dashboard() {
                           <Box
                             style={{
                               height: "100%",
-                              width: `${vaultData.zUSDPool.percentage}%`,
+                              width: `${vaultData.LUSDPool.percentage}%`,
                               background: "var(--violet-11)",
                               borderRadius: "0 10px 10px 0",
                             }}
@@ -631,7 +631,7 @@ function Dashboard() {
                               size="1"
                               style={{ color: "var(--violet-11)" }}
                             >
-                              zUSD ({vaultData.zUSDPool.percentage}%)
+                              LUSD ({vaultData.LUSDPool.percentage}%)
                             </Text>
                           </Flex>
                         </Flex>
@@ -663,11 +663,11 @@ function Dashboard() {
                   link="https://app.kamino.finance/liquidity?search=zbtc&filter=all&sort=tvl"
                 />
                 <VaultCard
-                  title="zUSD Pool"
-                  percentage={vaultData.zUSDPool.percentage}
-                  apy={vaultData.zUSDPool.apy}
-                  amount={vaultData.zUSDPool.amount}
-                  color={vaultData.zUSDPool.color}
+                  title="LUSD Pool"
+                  percentage={vaultData.LUSDPool.percentage}
+                  apy={vaultData.LUSDPool.apy}
+                  amount={vaultData.LUSDPool.amount}
+                  color={vaultData.LUSDPool.color}
                   link="https://www.orca.so/pools?tokens=zBTCug3er3tLyffELcvDNrKkCymbPWysGcWihESYfLg"
                 />
               </Grid>
