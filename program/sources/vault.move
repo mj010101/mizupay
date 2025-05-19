@@ -70,7 +70,7 @@ module z_fubao::vault {
     }
 
     /// Initialize the configuration with a one-time witness
-    public fun initialize(
+    public entry fun initialize(
         vault_cap: VaultCap,
         zusd_treasury_cap: TreasuryCap<ZUSD>,
         szusd_treasury_cap: TreasuryCap<SZUSD>,
@@ -93,7 +93,7 @@ module z_fubao::vault {
         transfer::share_object(vault);
     }
 
-    public fun deposit_lbtc(vault: &mut Vault, lbtc: Balance<LBTC>, ctx: &mut TxContext) {
+    public(package) fun deposit_lbtc(vault: &mut Vault, lbtc: Balance<LBTC>, ctx: &mut TxContext) {
         assert!(balance::value(&lbtc) > 0, EINVALID_AMOUNT);
         assert!(ctx.sender() == vault.authority, EUNAUTHORIZED);
 
@@ -105,7 +105,7 @@ module z_fubao::vault {
     }
 
     #[allow(lint(self_transfer))]
-    public fun withdraw_lbtc(vault: &mut Vault, amount: u64, ctx: &mut TxContext) {
+    public(package) fun withdraw_lbtc(vault: &mut Vault, amount: u64, ctx: &mut TxContext) {
         assert!(amount > 0 && amount <= balance::value(&vault.lbtc_balance), EINVALID_AMOUNT);
         assert!(ctx.sender() == vault.authority, EUNAUTHORIZED);
 
@@ -118,7 +118,7 @@ module z_fubao::vault {
         });
     }
 
-    public fun deposit_zusd(vault: &mut Vault, zusd: Balance<ZUSD>, ctx: &mut TxContext) {
+    public(package) fun deposit_zusd(vault: &mut Vault, zusd: Balance<ZUSD>, ctx: &mut TxContext) {
         assert!(balance::value(&zusd) > 0, EINVALID_AMOUNT);
         assert!(ctx.sender() == vault.authority, EUNAUTHORIZED);
 
@@ -130,7 +130,7 @@ module z_fubao::vault {
     }
 
     #[allow(lint(self_transfer))]
-    public fun withdraw_zusd(vault: &mut Vault, amount: u64, ctx: &mut TxContext) {
+    public(package) fun withdraw_zusd(vault: &mut Vault, amount: u64, ctx: &mut TxContext) {
         assert!(amount > 0 && amount <= balance::value(&vault.zusd_balance), EINVALID_AMOUNT);
         assert!(ctx.sender() == vault.authority, EUNAUTHORIZED);
         
@@ -143,7 +143,7 @@ module z_fubao::vault {
         });
     }
 
-    public fun create_obligation(vault: &mut Vault, ctx: &mut TxContext) {
+    public(package) fun create_obligation(vault: &mut Vault, ctx: &mut TxContext) {
         let sender = ctx.sender();
         assert!(!table::contains(&vault.obligation_mapping, sender), EOBLIGATION_ALREADY_EXISTS);
 
@@ -155,19 +155,19 @@ module z_fubao::vault {
         table::add(&mut vault.obligation_mapping, sender, obligation);
     }
 
-    public fun get_obligation(vault: &Vault, ctx: &TxContext): &Obligation {
+    public(package) fun get_obligation(vault: &Vault, ctx: &TxContext): &Obligation {
         let sender = ctx.sender();
         assert!(table::contains(&vault.obligation_mapping, sender), EOBLIGATION_NOT_FOUND);
         table::borrow(&vault.obligation_mapping, sender)
     }
 
-    public fun get_obligation_mut(vault: &mut Vault, ctx: &mut TxContext): &mut Obligation {
+    public(package) fun get_obligation_mut(vault: &mut Vault, ctx: &mut TxContext): &mut Obligation {
         let sender = ctx.sender();
         assert!(table::contains(&vault.obligation_mapping, sender), EOBLIGATION_NOT_FOUND);
         table::borrow_mut(&mut vault.obligation_mapping, sender)
     }
 
-    public fun get_or_create_obligation(vault: &mut Vault, ctx: &mut TxContext): &mut Obligation {
+    public(package) fun get_or_create_obligation(vault: &mut Vault, ctx: &mut TxContext): &mut Obligation {
         let sender = ctx.sender();
         if (!table::contains(&vault.obligation_mapping, sender)) {
             vault.create_obligation(ctx);
@@ -175,13 +175,13 @@ module z_fubao::vault {
         vault.get_obligation_mut(ctx)
     }
 
-    public fun delete_obligation(vault: &mut Vault, ctx: &mut TxContext) {
+    public(package) fun delete_obligation(vault: &mut Vault, ctx: &mut TxContext) {
         let sender = ctx.sender();
         assert!(table::contains(&vault.obligation_mapping, sender), EOBLIGATION_NOT_FOUND);
         table::remove(&mut vault.obligation_mapping, sender);
     }
 
-    public fun create_staking_position(vault: &mut Vault, ctx: &mut TxContext) {
+    public(package) fun create_staking_position(vault: &mut Vault, ctx: &mut TxContext) {
         let sender = ctx.sender();
         assert!(!table::contains(&vault.staking_position_mapping, sender), ESTAKING_POSITION_ALREADY_EXISTS);
         
@@ -192,62 +192,74 @@ module z_fubao::vault {
         table::add(&mut vault.staking_position_mapping, sender, staking_position);
     }
 
-    public fun get_staking_position(vault: &Vault, ctx: &TxContext): &StakingPosition {
+    public(package) fun get_staking_position(vault: &Vault, ctx: &TxContext): &StakingPosition {
         let sender = ctx.sender();
         assert!(table::contains(&vault.staking_position_mapping, sender), ESTAKING_POSITION_NOT_FOUND);
         table::borrow(&vault.staking_position_mapping, sender)
     }
 
-    public fun get_staking_position_mut(vault: &mut Vault, ctx: &mut TxContext): &mut StakingPosition {
+    public(package) fun get_staking_position_mut(vault: &mut Vault, ctx: &mut TxContext): &mut StakingPosition {
         let sender = ctx.sender();
         assert!(table::contains(&vault.staking_position_mapping, sender), ESTAKING_POSITION_NOT_FOUND);
         table::borrow_mut(&mut vault.staking_position_mapping, sender)
     }
 
-    public fun delete_staking_position(vault: &mut Vault, ctx: &mut TxContext) {
+    public(package) fun delete_staking_position(vault: &mut Vault, ctx: &mut TxContext) {
         let sender = ctx.sender();
         assert!(table::contains(&vault.staking_position_mapping, sender), ESTAKING_POSITION_NOT_FOUND);
         table::remove(&mut vault.staking_position_mapping, sender);
     }
     
-    public fun get_zusd_treasury_cap(vault: &mut Vault): &mut TreasuryCap<ZUSD> {
+    public(package) fun get_zusd_treasury_cap(vault: &mut Vault): &mut TreasuryCap<ZUSD> {
         &mut vault.zusd_treasury_cap
     }
 
-    public fun get_szusd_treasury_cap(vault: &mut Vault): &mut TreasuryCap<SZUSD> {
+    public(package) fun get_szusd_treasury_cap(vault: &mut Vault): &mut TreasuryCap<SZUSD> {
         &mut vault.szusd_treasury_cap
     }
 
-    public fun get_mut_lbtc_balance(vault: &mut Vault): &mut Balance<LBTC> {
+    public(package) fun get_mut_lbtc_balance(vault: &mut Vault): &mut Balance<LBTC> {
         &mut vault.lbtc_balance
     }
 
-    public fun get_mut_zusd_balance(vault: &mut Vault): &mut Balance<ZUSD> {
+    public(package) fun get_mut_zusd_balance(vault: &mut Vault): &mut Balance<ZUSD> {
         &mut vault.zusd_balance
     }
     
-    public fun lbtc_deposit(obligation: &Obligation): u64 {
+    public(package) fun lbtc_deposit(obligation: &Obligation): u64 {
         obligation.lbtc_deposit
     }
 
-    public fun lbtc_deposit_mut(obligation: &mut Obligation): &mut u64 {
+    public(package) fun lbtc_deposit_mut(obligation: &mut Obligation): &mut u64 {
         &mut obligation.lbtc_deposit
     }
 
-    public fun zusd_borrowed(obligation: &Obligation): u64 {
+    public(package) fun zusd_borrowed(obligation: &Obligation): u64 {
         obligation.zusd_borrowed
     }
 
-    public fun zusd_borrowed_mut(obligation: &mut Obligation): &mut u64 {
+    public(package) fun zusd_borrowed_mut(obligation: &mut Obligation): &mut u64 {
         &mut obligation.zusd_borrowed
     }
 
-    public fun staked_amount(staking_position: &StakingPosition): u64 {
+    public(package) fun staked_amount(staking_position: &StakingPosition): u64 {
         staking_position.staked_amount
     }
 
-    public fun staked_amount_mut(staking_position: &mut StakingPosition): &mut u64 {
+    public(package) fun staked_amount_mut(staking_position: &mut StakingPosition): &mut u64 {
         &mut staking_position.staked_amount
     }
 
+    public(package) fun zbtc_balance(vault: &Vault): &Balance<LBTC> {
+        &vault.lbtc_balance
+    }
+
+    public(package) fun zusd_balance(vault: &Vault): &Balance<ZUSD> {
+        &vault.zusd_balance
+    }
+
+    #[test_only]
+    public fun init_for_testing(ctx: &mut TxContext) {
+        init(VAULT {}, ctx);
+    }
 }

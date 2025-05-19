@@ -130,27 +130,32 @@ module z_fubao::config {
     }
 
     /// Get the current LTV ratio
-    public fun get_ltv_ratio(config: &ZFubaoConfig): u8 {
+    public(package) fun get_ltv_ratio(config: &ZFubaoConfig): u8 {
         config.ltv_ratio
     }
 
     /// Get the current ZBTC price
-    public fun get_zbtc_price(config: &ZFubaoConfig): u64 {
+    public(package) fun get_zbtc_price(config: &ZFubaoConfig): u64 {
         config.zbtc_price_in_zusd
     }
 
     /// Get the current SZUSD price ratio
-    public fun get_szusd_price_ratio(config: &ZFubaoConfig): u64 {
+    public(package) fun get_szusd_price_ratio(config: &ZFubaoConfig): u64 {
         config.szusd_price_ratio
     }
 
     /// Get the authority address
-    public fun get_authority(config: &ZFubaoConfig): address {
+    public(package) fun get_authority(config: &ZFubaoConfig): address {
         config.authority
     }
 
     /// Get the maximum LTV ratio
-    public fun get_max_ltv_ratio(): u8 {
+    public(package) fun get_max_ltv_ratio(): u8 {
         MAX_LTV_RATIO
+    }
+
+    #[test_only]
+    public fun init_for_testing(ctx: &mut TxContext) {
+        init(CONFIG {}, ctx);
     }
 } 

@@ -1,4 +1,4 @@
-module z_fubao::z_fubao {
+module z_fubao::staking {
     use sui::coin::{Self, Coin};
     use sui::event::emit;
     use z_fubao::config::{ZFubaoConfig};
@@ -28,7 +28,7 @@ module z_fubao::z_fubao {
         amount: u64,
     }
 
-    public fun open_staking_position(
+    public entry fun open_staking_position(
         _config: &ZFubaoConfig,
         vault: &mut Vault,
         ctx: &mut TxContext
@@ -40,7 +40,7 @@ module z_fubao::z_fubao {
         });
     }
 
-    public fun close_staking_position(
+    public entry fun close_staking_position(
         _config: &ZFubaoConfig,
         vault: &mut Vault,
         ctx: &mut TxContext
@@ -55,7 +55,7 @@ module z_fubao::z_fubao {
     }
 
     // Staking functions
-    public fun stake(
+    public entry fun stake(
         _config: &ZFubaoConfig,
         vault: &mut Vault,
         zusd_coin: Coin<ZUSD>,
@@ -79,7 +79,7 @@ module z_fubao::z_fubao {
         });
     }
 
-    public fun unstake(
+    public entry fun unstake(
         _config: &ZFubaoConfig,
         vault: &mut Vault,
         amount: u64,

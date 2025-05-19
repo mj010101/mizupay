@@ -8,6 +8,7 @@ module z_fubao::lending {
     use z_fubao::zusd::ZUSD;
     use z_fubao::vault::Vault;
     use z_fubao::vault::Obligation;
+    use std::debug::print;
     
     const EINSUFFICIENT_COLLATERAL: u64 = 1;
     const EINSUFFICIENT_BALANCE: u64 = 2;
@@ -35,7 +36,7 @@ module z_fubao::lending {
     }
     
     // Lending functions
-    public fun deposit_collateral(
+    public entry fun deposit_collateral(
         _config: &ZFubaoConfig,
         vault: &mut Vault,
         lbtc_coin: Coin<LBTC>,
@@ -60,7 +61,7 @@ module z_fubao::lending {
     }
 
     #[allow(lint(self_transfer))]
-    public fun withdraw_collateral(
+    public entry fun withdraw_collateral(
         config: &ZFubaoConfig,
         vault: &mut Vault,
         amount: u64,
@@ -92,7 +93,7 @@ module z_fubao::lending {
         });
     }
 
-    public fun borrow(
+    public entry fun borrow(
         config: &ZFubaoConfig,
         vault: &mut Vault,
         amount: u64,
@@ -116,22 +117,24 @@ module z_fubao::lending {
         });
     }
 
-    public fun repay(
+    public entry fun repay(
         _config: &ZFubaoConfig,
         vault: &mut Vault,
-        zusd_coin: Coin<ZUSD>,
+        zusd_coin: &mut Coin<ZUSD>,
         amount: u64,
         ctx: &mut TxContext
     ) {
         let obligation = vault.get_obligation_mut(ctx);
         assert!(amount > 0, EINVALID_AMOUNT);
-        assert!(coin::value(&zusd_coin) >= amount, EINSUFFICIENT_BALANCE);
+        assert!(coin::value(zusd_coin) >= amount, EINSUFFICIENT_BALANCE);
         assert!(obligation.zusd_borrowed() >= amount, EINSUFFICIENT_BALANCE);
 
         let zusd_borrowed_amount = obligation.zusd_borrowed_mut();
         *zusd_borrowed_amount = *zusd_borrowed_amount - amount;
 
-        coin::burn(vault.get_zusd_treasury_cap(), zusd_coin);
+        let zusd_coin_to_repay = coin::split(zusd_coin, amount, ctx);
+
+        coin::burn(vault.get_zusd_treasury_cap(), zusd_coin_to_repay);
         
         emit(RepayEvent {
             user: tx_context::sender(ctx),
@@ -140,21 +143,28 @@ module z_fubao::lending {
     }
 
     // Helper functions
-    fun calculate_max_borrowable(
+    public(package) fun calculate_max_borrowable(
         config: &ZFubaoConfig,
         obligation: &Obligation,
     ): u64 {
+        let padding_ratio = 5;
         let collateral_value = obligation.lbtc_deposit() * z_fubao::config::get_zbtc_price(config);
-        let max_borrowable = (collateral_value * (z_fubao::config::get_ltv_ratio(config) as u64)) / 100;
+        let max_borrowable = (collateral_value * ((z_fubao::config::get_ltv_ratio(config) as u64) - padding_ratio)) / 100;
         max_borrowable - obligation.zusd_borrowed()
     }
 
-    fun calculate_max_withdrawable(
+    public(package) fun calculate_max_withdrawable(
         config: &ZFubaoConfig,
         obligation: &Obligation,
     ): u64 {
-        let required_collateral = (obligation.zusd_borrowed() * 100) / (z_fubao::config::get_ltv_ratio(config) as u64);
-        let max_withdrawable = obligation.lbtc_deposit() - required_collateral;
-        max_withdrawable
+        let padding_ratio = 5;
+        let current_collateral = obligation.lbtc_deposit();
+        let needed_value_for_current_borrow = obligation.zusd_borrowed() * 100 / (z_fubao::config::get_ltv_ratio(config) as u64 - padding_ratio);
+        let needed_collateral_amount = needed_value_for_current_borrow / z_fubao::config::get_zbtc_price(config);
+        if (current_collateral > needed_collateral_amount) {
+            current_collateral - needed_collateral_amount
+        } else {
+            0
+        }
     }
 }
