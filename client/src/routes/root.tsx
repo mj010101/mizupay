@@ -329,7 +329,7 @@ function Root() {
                       fontWeight: "bold",
                     }}
                   >
-                    SOLANA
+                    SUI
                   </Text>
                 </Box>
 

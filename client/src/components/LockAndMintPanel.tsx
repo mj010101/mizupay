@@ -7,7 +7,7 @@ import {
   Separator,
   Card,
 } from "@radix-ui/themes";
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FeaturePanel } from "./FeaturePanel";
 import { useWallet } from "@suiet/wallet-kit";
 import { tokenIcons } from "../config";
@@ -59,7 +59,7 @@ export function LockAndMintPanel() {
     setIsProcessing(true);
     try {
       console.log(
-        `Locking ${btcAmount} LBTC as collateral and minting ${usdAmount} LUSD`,
+        `Locking ${btcAmount} LBTC as collateral and minting ${usdAmount} LUSD`
       );
 
       await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -67,7 +67,7 @@ export function LockAndMintPanel() {
       setBtcAmount("");
       setUsdAmount("");
       alert(
-        `Successfully locked ${btcAmount} LBTC and minted ${usdAmount} LUSD`,
+        `Successfully locked ${btcAmount} LBTC and minted ${usdAmount} LUSD`
       );
     } catch (error: unknown) {
       console.error("Operation failed:", error);
