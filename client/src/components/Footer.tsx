@@ -19,11 +19,11 @@ export function Footer() {
       <Container size="3">
         <Flex justify="between" align="center" wrap="wrap" gap="4">
           <Text style={{ color: "var(--gray-11)" }}>
-            © 2025 SuiFuBao. All rights reserved.
+            © 2025 Mizupay. All rights reserved.
           </Text>
           <Flex gap="4">
             <Link
-              to="https://github.com/mj010101/SuiFuBao"
+              to="https://github.com/mj010101/Mizupay"
               style={{
                 color: "var(--indigo-11)",
                 textDecoration: "none",

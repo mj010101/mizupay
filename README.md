@@ -1,6 +1,6 @@
-# SuiFuBao: Sui BTC PayFi Protocol
+# Mizupay: Sui BTC PayFi Protocol
 
-SuiFuBao is a DeFi protocol built on Sui that enables users to:
+Mizupay is a DeFi protocol built on Sui that enables users to:
 
 1. Deposit LBTC as collateral to mint LUSD stablecoins
 2. Stake LUSD tokens to receive sLUSD which is yield-bearing stablecoin
@@ -44,8 +44,8 @@ A web-based interface for interacting with the protocol, built with:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/SuiFuBao.git
-cd SuiFuBao
+git clone https://github.com/yourusername/Mizupay.git
+cd Mizupay
 
 # Build Sui modules (once the Sui contracts are ready)
 # cd program/modules
