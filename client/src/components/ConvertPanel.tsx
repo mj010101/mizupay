@@ -7,10 +7,15 @@ import {
   Card,
   Tabs,
 } from "@radix-ui/themes";
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FeaturePanel } from "./FeaturePanel";
-import { SelectedWalletAccountContext } from "../context/SelectedWalletAccountContext";
 import { tokenIcons } from "../config";
+import { useWallet } from "@suiet/wallet-kit";
+import {
+  fetchSZUSDPriceRatio,
+  buildStakeTx,
+  buildUnstakeTx,
+} from "../utils/contract";
 
 type TokenRates = {
   [key: string]: number;
@@ -30,15 +35,18 @@ const modeRatesMap: Record<Mode, TokenRates> = {
 };
 
 export function ConvertPanel({ mode }: { mode: Mode }) {
-  const [selectedWalletAccount] = useContext(SelectedWalletAccountContext);
-  const [activeTab, setActiveTab] = useState<"stake" | "unstake">("stake");
+  const wallet = useWallet();
+  const { connected, address } = wallet;
 
-  const rates = modeRatesMap[mode];
+  const [activeTab, setActiveTab] = useState<"stake" | "unstake">("stake");
 
   const [fromToken, setFromToken] = useState("");
   const [toToken, setToToken] = useState("");
   const [amount, setAmount] = useState("");
   const [isSwapping, setIsSwapping] = useState(false);
+
+  // Dynamic SZUSD price ratio fetched from chain (scaled by 1e4). Defaults to 1:1.
+  const [szusdRatio, setSzusdRatio] = useState<number>(10000);
 
   useEffect(() => {
     if (mode === "btc") {
@@ -60,9 +68,25 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
     }
   }, [activeTab, mode]);
 
+  // Compute the current conversion rate.
   const getRate = () => {
-    const key = `${fromToken}-${toToken}`;
-    return rates[key] || 0;
+    if (mode === "btc") {
+      const key = `${fromToken}-${toToken}`;
+      return modeRatesMap[mode][key] || 0;
+    }
+
+    // szusdRatio is scaled by 1e4. Convert to floating multiplier.
+    const ratio = szusdRatio / 1e4;
+
+    // If converting LUSD -> sLUSD (stake), rate = 1 / ratio (assuming ratio = sLUSD price in LUSD terms)
+    // For symmetry we invert when needed.
+    if (fromToken === "LUSD" && toToken === "sLUSD") {
+      return 1 / ratio;
+    }
+    if (fromToken === "sLUSD" && toToken === "LUSD") {
+      return ratio;
+    }
+    return 0;
   };
 
   const getEstimatedAmount = () => {
@@ -71,29 +95,62 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
     return (parseFloat(amount) * rate).toFixed(6);
   };
 
+  // Fetch SZUSD price ratio periodically when mode is LUSD.
+  useEffect(() => {
+    if (mode !== "lusd") return;
+
+    const fetchRatio = async () => {
+      const ratio = await fetchSZUSDPriceRatio();
+      if (ratio !== null && ratio > 0) {
+        setSzusdRatio(ratio);
+      }
+    };
+
+    fetchRatio();
+    const interval = setInterval(fetchRatio, 30000);
+    return () => clearInterval(interval);
+  }, [mode]);
+
   const handleSwap = async () => {
-    if (!selectedWalletAccount) {
+    if (!connected || !address) {
       alert("Please connect your wallet first");
       return;
     }
 
     setIsSwapping(true);
     try {
-      console.log(
-        `Swapping ${amount} ${fromToken} for approximately ${getEstimatedAmount()} ${toToken}`,
-      );
+      const numericAmount = parseFloat(amount);
+      if (isNaN(numericAmount) || numericAmount <= 0) {
+        throw new Error("Invalid amount");
+      }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      let tx;
+      if (activeTab === "stake") {
+        tx = await buildStakeTx(address, numericAmount);
+      } else {
+        tx = await buildUnstakeTx(numericAmount);
+      }
 
+      // sign and execute
+      const result = await wallet.signAndExecuteTransactionBlock({
+        // Casting to any to avoid type mismatch between SDK versions.
+        transactionBlock: tx as any,
+      });
+
+      console.log("Tx result", result);
+
+      const estimated = getEstimatedAmount();
       setAmount("");
       alert(
-        `Successfully swapped ${amount} ${fromToken} to ${getEstimatedAmount()} ${toToken}`,
+        `Successfully ${
+          activeTab === "stake" ? "staked" : "unstaked"
+        } ${amount} ${fromToken} to ${estimated} ${toToken}`
       );
     } catch (error: unknown) {
       console.error("Swap failed:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
-      alert(`Swap failed: ${errorMessage}`);
+      alert(`Operation failed: ${errorMessage}`);
     } finally {
       setIsSwapping(false);
     }
@@ -295,9 +352,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
             color="indigo"
             size="4"
             onClick={handleSwap}
-            disabled={
-              !amount || !selectedWalletAccount || isSwapping || !toToken
-            }
+            disabled={!amount || !connected || isSwapping || !toToken}
             style={{
               background: "linear-gradient(45deg, #4DA2FF, #63C9B9)",
               borderRadius: "24px",
@@ -310,7 +365,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
               height: "50px",
             }}
             onMouseEnter={(e) => {
-              if (amount && selectedWalletAccount && !isSwapping && toToken) {
+              if (amount && connected && !isSwapping && toToken) {
                 e.currentTarget.style.transform = "translateY(-2px)";
                 e.currentTarget.style.boxShadow =
                   "0 6px 20px rgba(77, 162, 255, 0.5)";
@@ -324,7 +379,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
           >
             {isSwapping
               ? `${operationString}...`
-              : selectedWalletAccount
+              : connected
               ? operationString
               : `Connect Wallet to ${operationString}`}
           </Button>

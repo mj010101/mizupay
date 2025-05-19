@@ -11,17 +11,14 @@ import { useState, useEffect } from "react";
 import { FeaturePanel } from "./FeaturePanel";
 import { useWallet } from "@suiet/wallet-kit";
 import { tokenIcons } from "../config";
-
-const fetchBTCPrice = async (): Promise<number> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(84000 + Math.random() * 2000);
-    }, 500);
-  });
-};
+import {
+  fetchOnchainBTCPrice,
+  buildDepositAndBorrowTx,
+} from "../utils/contract";
 
 export function LockAndMintPanel() {
-  const { connected, address } = useWallet();
+  const wallet = useWallet();
+  const { connected, address } = wallet;
   const [btcAmount, setBtcAmount] = useState("");
   const [usdAmount, setUsdAmount] = useState("");
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
@@ -30,8 +27,11 @@ export function LockAndMintPanel() {
 
   useEffect(() => {
     const getPrice = async () => {
-      const price = await fetchBTCPrice();
-      setBtcPrice(price);
+      const price = await fetchOnchainBTCPrice();
+      if (price !== null) {
+        // On-chain price is stored with 9 decimals. Convert to floating number in USD.
+        setBtcPrice(price / 1e9);
+      }
     };
 
     getPrice();
@@ -58,11 +58,20 @@ export function LockAndMintPanel() {
 
     setIsProcessing(true);
     try {
-      console.log(
-        `Locking ${btcAmount} LBTC as collateral and minting ${usdAmount} LUSD`
+      if (!address) throw new Error("Wallet address not available");
+
+      const tx = await buildDepositAndBorrowTx(
+        address,
+        parseFloat(btcAmount),
+        parseFloat(usdAmount)
       );
 
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const result = await wallet.signAndExecuteTransactionBlock({
+        // Casting to any to avoid potential version mismatch of the Transaction type across packages.
+        transactionBlock: tx as any,
+      });
+
+      console.log("Tx result", result);
 
       setBtcAmount("");
       setUsdAmount("");

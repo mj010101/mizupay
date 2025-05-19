@@ -1,28 +1,183 @@
-import { useWallets } from "@wallet-standard/react";
+import { useWallet } from "@suiet/wallet-kit";
+import { useEffect, useState } from "react";
+import { ZUSD_TYPE, SZUSD_TYPE, LBTC_TYPE } from "../suiConfig";
+import { suiClient } from "../utils/suiClient";
+import { fetchOnchainBTCPrice } from "../utils/contract";
+
+// ----- Binance BTC 24h change cache helpers -----
+const BINANCE_BTC_CHANGE_CACHE_KEY = "binance_btc24h_change_percent";
+const CACHE_TTL_MS = 60_000; // 1 minute
+
+async function getBTC24hChangePercent(): Promise<number | null> {
+  // Guard against non-browser environments
+  if (typeof window === "undefined" || typeof localStorage === "undefined") {
+    return null;
+  }
+
+  try {
+    const cached = localStorage.getItem(BINANCE_BTC_CHANGE_CACHE_KEY);
+    if (cached) {
+      const { value, ts } = JSON.parse(cached) as {
+        value: number;
+        ts: number;
+      };
+      if (Date.now() - ts < CACHE_TTL_MS) {
+        return value;
+      }
+    }
+
+    // Fetch fresh data
+    const res = await fetch(
+      "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
+    );
+    const data = (await res.json()) as { priceChangePercent?: string };
+    if (data.priceChangePercent !== undefined) {
+      const value = parseFloat(data.priceChangePercent);
+      // Cache the value with timestamp
+      localStorage.setItem(
+        BINANCE_BTC_CHANGE_CACHE_KEY,
+        JSON.stringify({ value, ts: Date.now() })
+      );
+      return value;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 export const useDashboardData = () => {
-  const [wallet] = useWallets();
-  const account = wallet?.accounts?.[0];
+  const wallet = useWallet();
+  const account = wallet?.account;
   const isConnected = !!account;
 
-  const assetData = {
+  // ---------- State ----------
+  const [assetData, setAssetData] = useState({
     LBTC: {
-      value: isConnected ? "1.25 BTC" : "-",
-      change: isConnected ? "0.05 BTC (4.2%)" : "-",
+      value: "-",
+      change: "-",
       isPositive: true,
-      dollarValue: isConnected ? "$104,319" : undefined,
+      dollarValue: undefined as string | undefined,
     },
     LUSD: {
-      value: isConnected ? "$15,750" : "-",
-      change: isConnected ? "$750 (5.0%)" : "-",
+      value: "-",
+      change: "-",
       isPositive: true,
     },
     sLUSD: {
-      value: isConnected ? "$8,320" : "-",
-      change: isConnected ? "$320 (4.0%)" : "-",
+      value: "-",
+      change: "-",
       isPositive: true,
     },
-  };
+  });
+
+  // ---------- Effects ----------
+  useEffect(() => {
+    // Only fetch when wallet connected & address available
+    if (!isConnected || !account?.address) {
+      console.log(isConnected, account?.address);
+      setAssetData((prev) => ({
+        ...prev,
+        LBTC: { ...prev.LBTC, value: "-", change: "-", dollarValue: undefined },
+        LUSD: { ...prev.LUSD, value: "-", change: "-" },
+        sLUSD: { ...prev.sLUSD, value: "-", change: "-" },
+      }));
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchBalances = async () => {
+      try {
+        // Parallel fetches for efficiency
+        const [lusdBal, slusdBal, lbtcBal, btcPriceRaw, btcChangePercent] =
+          await Promise.all([
+            suiClient.getBalance({
+              owner: account.address,
+              coinType: ZUSD_TYPE,
+            }),
+            suiClient.getBalance({
+              owner: account.address,
+              coinType: SZUSD_TYPE,
+            }),
+            suiClient.getBalance({
+              owner: account.address,
+              coinType: LBTC_TYPE,
+            }),
+            fetchOnchainBTCPrice(),
+            getBTC24hChangePercent(),
+          ]);
+
+        if (cancelled) return;
+
+        // Convert on-chain balances (u64) to decimals (assume 9 decimals)
+        const DECIMALS = 1e9;
+        const lusdAmount = Number(lusdBal.totalBalance) / DECIMALS;
+        const slusdAmount = Number(slusdBal.totalBalance) / DECIMALS;
+        const lbtcAmount = Number(lbtcBal.totalBalance) / DECIMALS;
+
+        // Compute dollar value for LBTC using on-chain price if available
+        let lbtcDollarValue: string | undefined = undefined;
+        if (btcPriceRaw && btcPriceRaw > 0) {
+          const pricePerBtc = btcPriceRaw / DECIMALS; // convert back to decimal
+          const valueInZusd = lbtcAmount * pricePerBtc;
+          lbtcDollarValue = `$${valueInZusd.toLocaleString(undefined, {
+            maximumFractionDigits: 2,
+          })}`;
+        }
+
+        // Determine BTC change display
+        let btcChangeDisplay = "-";
+        let btcIsPositive = true;
+        if (btcChangePercent !== null) {
+          const deltaBtc = (lbtcAmount * Math.abs(btcChangePercent)) / 100;
+          btcChangeDisplay = `${deltaBtc.toLocaleString(undefined, {
+            maximumFractionDigits: 4,
+          })} BTC (${Math.abs(btcChangePercent).toFixed(2)}%)`;
+          btcIsPositive = btcChangePercent >= 0;
+        }
+
+        setAssetData((prev) => ({
+          ...prev,
+          LBTC: {
+            ...prev.LBTC,
+            value: `${lbtcAmount.toLocaleString(undefined, {
+              maximumFractionDigits: 6,
+            })} BTC`,
+            change: btcChangeDisplay,
+            isPositive: btcIsPositive,
+            dollarValue: lbtcDollarValue,
+          },
+          LUSD: {
+            ...prev.LUSD,
+            value: `${lusdAmount.toLocaleString(undefined, {
+              maximumFractionDigits: 2,
+            })} LUSD`,
+            change: "-", // real-time change not yet implemented
+          },
+          sLUSD: {
+            ...prev.sLUSD,
+            value: `${slusdAmount.toLocaleString(undefined, {
+              maximumFractionDigits: 2,
+            })} sLUSD`,
+            change: "-",
+            // Optionally, we could add dollar equivalent here in the future
+          },
+        }));
+      } catch (e) {
+        console.error("Failed to fetch dashboard balances", e);
+      }
+    };
+
+    fetchBalances();
+
+    // Optional: refresh every 30s
+    const interval = setInterval(fetchBalances, 30_000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [isConnected, account?.address]);
 
   const yieldData = {
     totalYield: isConnected ? "$1,245.65" : "-",
