@@ -62,7 +62,7 @@ fun test_init_and_update_config() {
         assert!(config::get_ltv_ratio(&config) == ltv_ratio, 0);
         assert!(config::get_lbtc_price_in_mzusd(&config) == lbtc_price_in_mzusd, 0);
         assert!(config::get_authority(&config) == ADMIN_USER, 0);
-        assert!(config::get_smzusd_price_ratio(&config) == 10000, 0);
+        assert!(config::get_smzusd_price_ratio(&config) == 1_000_000_000, 0);
         assert!(config::get_max_ltv_ratio() == 75, 0);
 
         config::update_ltv_ratio(&mut config, new_ltv_ratio, scenario.ctx());
