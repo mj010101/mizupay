@@ -1,9 +1,9 @@
-module z_fubao::vault {
+module mizupay::vault {
     use sui::event::emit;
-    use z_fubao::lbtc::LBTC;
+    use mizupay::lbtc::LBTC;
     use sui::coin::TreasuryCap;
-    use z_fubao::szusd::SZUSD;
-    use z_fubao::zusd::ZUSD;
+    use mizupay::smzusd::SMZUSD;
+    use mizupay::mzusd::MZUSD;
     use sui::balance::Balance;
     use sui::balance;
     use sui::table::{Self, Table};
@@ -20,7 +20,7 @@ module z_fubao::vault {
         new_balance: u64,
     }
 
-    public struct VaultZUSDBalanceUpdatedEvent has copy, drop {
+    public struct VaultMZUSDBalanceUpdatedEvent has copy, drop {
         old_balance: u64,
         new_balance: u64,
     }
@@ -28,7 +28,7 @@ module z_fubao::vault {
     public struct Obligation has store, drop {
         user: address,
         lbtc_deposit: u64,
-        zusd_borrowed: u64,
+        mzusd_borrowed: u64,
     }
 
     public struct StakingPosition has store, drop {
@@ -41,10 +41,10 @@ module z_fubao::vault {
         authority: address,
         
         lbtc_balance: Balance<LBTC>,
-        zusd_balance: Balance<ZUSD>,
+        mzusd_balance: Balance<MZUSD>,
 
-        zusd_treasury_cap: TreasuryCap<ZUSD>,
-        szusd_treasury_cap: TreasuryCap<SZUSD>,
+        mzusd_treasury_cap: TreasuryCap<MZUSD>,
+        smzusd_treasury_cap: TreasuryCap<SMZUSD>,
 
         obligation_mapping: Table<address, Obligation>,
         staking_position_mapping: Table<address, StakingPosition>,
@@ -72,17 +72,17 @@ module z_fubao::vault {
     /// Initialize the configuration with a one-time witness
     public entry fun initialize(
         vault_cap: VaultCap,
-        zusd_treasury_cap: TreasuryCap<ZUSD>,
-        szusd_treasury_cap: TreasuryCap<SZUSD>,
+        mzusd_treasury_cap: TreasuryCap<MZUSD>,
+        smzusd_treasury_cap: TreasuryCap<SMZUSD>,
         ctx: &mut TxContext
     ) {
         let vault = Vault {
             id: object::new(ctx),
             authority: ctx.sender(),
             lbtc_balance: balance::zero(),
-            zusd_balance: balance::zero(),
-            zusd_treasury_cap,
-            szusd_treasury_cap,
+            mzusd_balance: balance::zero(),
+            mzusd_treasury_cap,
+            smzusd_treasury_cap,
             obligation_mapping: table::new(ctx),
             staking_position_mapping: table::new(ctx),
         };
@@ -118,28 +118,28 @@ module z_fubao::vault {
         });
     }
 
-    public(package) fun deposit_zusd(vault: &mut Vault, zusd: Balance<ZUSD>, ctx: &mut TxContext) {
-        assert!(balance::value(&zusd) > 0, EINVALID_AMOUNT);
+    public(package) fun deposit_mzusd(vault: &mut Vault, mzusd: Balance<MZUSD>, ctx: &mut TxContext) {
+        assert!(balance::value(&mzusd) > 0, EINVALID_AMOUNT);
         assert!(ctx.sender() == vault.authority, EUNAUTHORIZED);
 
-        balance::join(&mut vault.zusd_balance, zusd);
-        emit(VaultZUSDBalanceUpdatedEvent {
-            old_balance: balance::value(&vault.zusd_balance),
-            new_balance: balance::value(&vault.zusd_balance),
+        balance::join(&mut vault.mzusd_balance, mzusd);
+        emit(VaultMZUSDBalanceUpdatedEvent {
+            old_balance: balance::value(&vault.mzusd_balance),
+            new_balance: balance::value(&vault.mzusd_balance),
         });
     }
 
     #[allow(lint(self_transfer))]
-    public(package) fun withdraw_zusd(vault: &mut Vault, amount: u64, ctx: &mut TxContext) {
-        assert!(amount > 0 && amount <= balance::value(&vault.zusd_balance), EINVALID_AMOUNT);
+    public(package) fun withdraw_mzusd(vault: &mut Vault, amount: u64, ctx: &mut TxContext) {
+        assert!(amount > 0 && amount <= balance::value(&vault.mzusd_balance), EINVALID_AMOUNT);
         assert!(ctx.sender() == vault.authority, EUNAUTHORIZED);
         
-        let zusd = balance::split(&mut vault.zusd_balance, amount);
-        transfer::public_transfer(zusd.into_coin(ctx), ctx.sender());
+        let mzusd = balance::split(&mut vault.mzusd_balance, amount);
+        transfer::public_transfer(mzusd.into_coin(ctx), ctx.sender());
 
-        emit(VaultZUSDBalanceUpdatedEvent {
-            old_balance: balance::value(&vault.zusd_balance),
-            new_balance: balance::value(&vault.zusd_balance),
+        emit(VaultMZUSDBalanceUpdatedEvent {
+            old_balance: balance::value(&vault.mzusd_balance),
+            new_balance: balance::value(&vault.mzusd_balance),
         });
     }
 
@@ -150,7 +150,7 @@ module z_fubao::vault {
         let obligation = Obligation {
             user: sender,
             lbtc_deposit: 0,
-            zusd_borrowed: 0,
+            mzusd_borrowed: 0,
         };
         table::add(&mut vault.obligation_mapping, sender, obligation);
     }
@@ -210,20 +210,20 @@ module z_fubao::vault {
         table::remove(&mut vault.staking_position_mapping, sender);
     }
     
-    public(package) fun get_zusd_treasury_cap(vault: &mut Vault): &mut TreasuryCap<ZUSD> {
-        &mut vault.zusd_treasury_cap
+    public(package) fun get_mzusd_treasury_cap(vault: &mut Vault): &mut TreasuryCap<MZUSD> {
+        &mut vault.mzusd_treasury_cap
     }
 
-    public(package) fun get_szusd_treasury_cap(vault: &mut Vault): &mut TreasuryCap<SZUSD> {
-        &mut vault.szusd_treasury_cap
+    public(package) fun get_smzusd_treasury_cap(vault: &mut Vault): &mut TreasuryCap<SMZUSD> {
+        &mut vault.smzusd_treasury_cap
     }
 
     public(package) fun get_mut_lbtc_balance(vault: &mut Vault): &mut Balance<LBTC> {
         &mut vault.lbtc_balance
     }
 
-    public(package) fun get_mut_zusd_balance(vault: &mut Vault): &mut Balance<ZUSD> {
-        &mut vault.zusd_balance
+    public(package) fun get_mut_mzusd_balance(vault: &mut Vault): &mut Balance<MZUSD> {
+        &mut vault.mzusd_balance
     }
     
     public(package) fun lbtc_deposit(obligation: &Obligation): u64 {
@@ -234,12 +234,12 @@ module z_fubao::vault {
         &mut obligation.lbtc_deposit
     }
 
-    public(package) fun zusd_borrowed(obligation: &Obligation): u64 {
-        obligation.zusd_borrowed
+    public(package) fun mzusd_borrowed(obligation: &Obligation): u64 {
+        obligation.mzusd_borrowed
     }
 
-    public(package) fun zusd_borrowed_mut(obligation: &mut Obligation): &mut u64 {
-        &mut obligation.zusd_borrowed
+    public(package) fun mzusd_borrowed_mut(obligation: &mut Obligation): &mut u64 {
+        &mut obligation.mzusd_borrowed
     }
 
     public(package) fun staked_amount(staking_position: &StakingPosition): u64 {
@@ -254,8 +254,8 @@ module z_fubao::vault {
         &vault.lbtc_balance
     }
 
-    public(package) fun zusd_balance(vault: &Vault): &Balance<ZUSD> {
-        &vault.zusd_balance
+    public(package) fun mzusd_balance(vault: &Vault): &Balance<MZUSD> {
+        &vault.mzusd_balance
     }
 
     #[test_only]

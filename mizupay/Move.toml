@@ -1,5 +1,5 @@
 [package]
-name = "z_fubao"
+name = "mizupay"
 version = "0.0.1"
 edition = "2024.beta"
 
@@ -10,7 +10,7 @@ Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-fram
 # bascule = { git = "https://github.com/lombard-finance/sui-move-contracts", subdir = "move/bascule", rev = "main" }
 
 [addresses]
-z_fubao = "0x0" 
+mizupay = "0x0" 
 # lbtc_v1 = "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040"
 # lbtc_v4 = "0x818430a456ff977f7320f78650d19801f90758d200a01dd3c2c679472c521357"
 # sui =  "0000000000000000000000000000000000000000000000000000000000000002"

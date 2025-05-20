@@ -1,14 +1,14 @@
-module z_fubao::staking {
+module mizupay::staking {
     use sui::coin::{Self, Coin};
     use sui::event::emit;
-    use z_fubao::config::{ZFubaoConfig};
+    use mizupay::config::{MizuPayConfig};
     use sui::balance;
-    use z_fubao::zusd::ZUSD;
-    use z_fubao::vault::Vault;
+    use mizupay::mzusd::MZUSD;
+    use mizupay::vault::Vault;
 
     const EINSUFFICIENT_BALANCE: u64 = 1;
     const EINVALID_AMOUNT: u64 = 2;
-    const EINSUFFICIENT_ZUSD_IN_VAULT: u64 = 3;
+    const EINSUFFICIENT_MZUSD_IN_VAULT: u64 = 3;
 
     public struct OpenStakingPositionEvent has copy, drop {
         user: address,
@@ -29,7 +29,7 @@ module z_fubao::staking {
     }
 
     public entry fun open_staking_position(
-        _config: &ZFubaoConfig,
+        _config: &MizuPayConfig,
         vault: &mut Vault,
         ctx: &mut TxContext
     ) {
@@ -41,12 +41,12 @@ module z_fubao::staking {
     }
 
     public entry fun close_staking_position(
-        _config: &ZFubaoConfig,
+        _config: &MizuPayConfig,
         vault: &mut Vault,
         ctx: &mut TxContext
     ) {
         let staking_position = vault.get_staking_position(ctx);
-        user_withdraw_zusd(vault, staking_position.staked_amount(), ctx);
+        user_withdraw_mzusd(vault, staking_position.staked_amount(), ctx);
         vault.delete_staking_position(ctx);
 
         emit(CloseStakingPositionEvent {
@@ -56,21 +56,21 @@ module z_fubao::staking {
 
     // Staking functions
     public entry fun stake(
-        _config: &ZFubaoConfig,
+        _config: &MizuPayConfig,
         vault: &mut Vault,
-        zusd_coin: Coin<ZUSD>,
+        mzusd_coin: Coin<MZUSD>,
         ctx: &mut TxContext
     ) {
 
-        let amount = coin::value(&zusd_coin);
+        let amount = coin::value(&mzusd_coin);
         assert!(amount > 0, EINVALID_AMOUNT);
 
         let staking_position = vault.get_staking_position_mut(ctx);
         let staked_amount = staking_position.staked_amount_mut();
         *staked_amount = *staked_amount + amount;
 
-        let zusd_balance = vault.get_mut_zusd_balance();
-        balance::join(zusd_balance, zusd_coin.into_balance());
+        let mzusd_balance = vault.get_mut_mzusd_balance();
+        balance::join(mzusd_balance, mzusd_coin.into_balance());
 
 
         emit(StakeEvent {
@@ -80,14 +80,14 @@ module z_fubao::staking {
     }
 
     public entry fun unstake(
-        _config: &ZFubaoConfig,
+        _config: &MizuPayConfig,
         vault: &mut Vault,
         amount: u64,
         ctx: &mut TxContext
     ) {
         assert!(amount > 0, EINVALID_AMOUNT);
 
-        user_withdraw_zusd(vault,  amount, ctx);
+        user_withdraw_mzusd(vault, amount, ctx);
 
         emit(UnstakeEvent {
             user: tx_context::sender(ctx),
@@ -96,7 +96,7 @@ module z_fubao::staking {
     }
 
     #[allow(lint(self_transfer))]
-    fun user_withdraw_zusd(
+    fun user_withdraw_mzusd(
         vault: &mut Vault,
         amount: u64,
         ctx: &mut TxContext
@@ -107,11 +107,11 @@ module z_fubao::staking {
         let staked_amount = staking_position.staked_amount_mut();
         *staked_amount = *staked_amount - amount;
 
-        let zusd_balance = vault.get_mut_zusd_balance();
-        assert!(balance::value(zusd_balance) >= amount, EINSUFFICIENT_ZUSD_IN_VAULT);
+        let mzusd_balance = vault.get_mut_mzusd_balance();
+        assert!(balance::value(mzusd_balance) >= amount, EINSUFFICIENT_MZUSD_IN_VAULT);
 
-        let zusd_coin = balance::split(zusd_balance, amount).into_coin(ctx);
-        transfer::public_transfer(zusd_coin, ctx.sender());
+        let mzusd_coin = balance::split(mzusd_balance, amount).into_coin(ctx);
+        transfer::public_transfer(mzusd_coin, ctx.sender());
     }
 
 }
