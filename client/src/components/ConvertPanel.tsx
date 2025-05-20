@@ -12,10 +12,12 @@ import { FeaturePanel } from "./FeaturePanel";
 import { tokenIcons } from "../config";
 import { useWallet } from "@suiet/wallet-kit";
 import {
-  fetchSZUSDPriceRatio,
+  fetchSMZUSDPriceRatio,
   buildStakeTx,
   buildUnstakeTx,
 } from "../utils/contract";
+import { suiClient } from "../utils/suiClient";
+import { LBTC_TYPE, MZUSD_TYPE, SMZUSD_TYPE } from "../suiConfig";
 
 type TokenRates = {
   [key: string]: number;
@@ -45,8 +47,11 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
   const [amount, setAmount] = useState("");
   const [isSwapping, setIsSwapping] = useState(false);
 
-  // Dynamic SZUSD price ratio fetched from chain (scaled by 1e4). Defaults to 1:1.
-  const [szusdRatio, setSzusdRatio] = useState<number>(10000);
+  // Dynamic SMZUSD price ratio fetched from chain (scaled by 1e4). Defaults to 1:1.
+  const [smzusdRatio, setSmzusdRatio] = useState<number>(10000);
+
+  // --- New: balance state for the `from` token ---
+  const [fromBalance, setFromBalance] = useState<number | null>(null);
 
   useEffect(() => {
     if (mode === "btc") {
@@ -75,8 +80,8 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
       return modeRatesMap[mode][key] || 0;
     }
 
-    // szusdRatio is scaled by 1e4. Convert to floating multiplier.
-    const ratio = szusdRatio / 1e4;
+    // smzusdRatio is scaled by 1e4. Convert to floating multiplier.
+    const ratio = smzusdRatio / 1e4;
 
     // If converting mzUSD -> smzUSD (stake), rate = 1 / ratio (assuming ratio = smzUSD price in mzUSD terms)
     // For symmetry we invert when needed.
@@ -95,14 +100,14 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
     return (parseFloat(amount) * rate).toFixed(6);
   };
 
-  // Fetch SZUSD price ratio periodically when mode is mzUSD.
+  // Fetch SMZUSD price ratio periodically when mode is mzUSD.
   useEffect(() => {
     if (mode !== "mzUSD") return;
 
     const fetchRatio = async () => {
-      const ratio = await fetchSZUSDPriceRatio();
+      const ratio = await fetchSMZUSDPriceRatio();
       if (ratio !== null && ratio > 0) {
-        setSzusdRatio(ratio);
+        setSmzusdRatio(ratio);
       }
     };
 
@@ -110,6 +115,63 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
     const interval = setInterval(fetchRatio, 30000);
     return () => clearInterval(interval);
   }, [mode]);
+
+  // Fetch the wallet balance for the currently selected `fromToken`
+  useEffect(() => {
+    if (!connected || !address) {
+      setFromBalance(null);
+      return;
+    }
+
+    const coinTypeMap: Record<string, string | undefined> = {
+      LBTC: LBTC_TYPE,
+      mzUSD: MZUSD_TYPE,
+      smzUSD: SMZUSD_TYPE,
+    };
+
+    const coinType = coinTypeMap[fromToken];
+
+    // If we don't have a mapping (e.g. BTC), skip fetching balance.
+    if (!coinType) {
+      setFromBalance(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchBalance = async () => {
+      try {
+        const bal = await suiClient.getBalance({
+          owner: address,
+          coinType,
+        });
+        console.log("bal", bal);
+        if (cancelled) return;
+        const balanceNum = Number(bal.totalBalance) / 1e9; // assume 9 decimals
+        setFromBalance(balanceNum);
+      } catch (err) {
+        console.error("Failed to fetch balance for", fromToken, err);
+        if (!cancelled) setFromBalance(null);
+      }
+    };
+
+    fetchBalance();
+
+    // Optionally refresh every 30s
+    const interval = setInterval(fetchBalance, 30000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [connected, address, fromToken]);
+
+  // --- Utility to determine if entered amount exceeds balance ---
+  const exceedsBalance = (() => {
+    if (fromBalance === null) return false; // unknown balance, don't block
+    const numericAmount = parseFloat(amount);
+    if (isNaN(numericAmount)) return false;
+    return numericAmount > fromBalance;
+  })();
 
   const handleSwap = async () => {
     if (!connected || !address) {
@@ -144,7 +206,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
       alert(
         `Successfully ${
           activeTab === "stake" ? "staked" : "unstaked"
-        } ${amount} ${fromToken} to ${estimated} ${toToken}`,
+        } ${amount} ${fromToken} to ${estimated} ${toToken}`
       );
     } catch (error: unknown) {
       console.error("Swap failed:", error);
@@ -207,14 +269,24 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
           </Tabs.Root>
 
           <Box>
-            <Text
-              as="label"
-              size="3"
-              weight="bold"
-              style={{ color: "#4DA2FF" }}
-            >
-              From
-            </Text>
+            <Flex justify="between" align="baseline">
+              <Text
+                as="label"
+                size="3"
+                weight="bold"
+                style={{ color: "#4DA2FF" }}
+              >
+                From
+              </Text>
+              <Text size="2" color="gray">
+                Balance:{" "}
+                {fromBalance !== null
+                  ? fromBalance.toLocaleString(undefined, {
+                      maximumFractionDigits: 6,
+                    })
+                  : "-"}
+              </Text>
+            </Flex>
             <Flex gap="2" style={{ marginTop: "6px" }}>
               <Box
                 style={{
@@ -352,7 +424,9 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
             color="indigo"
             size="4"
             onClick={handleSwap}
-            disabled={!amount || !connected || isSwapping || !toToken}
+            disabled={
+              !amount || !connected || isSwapping || !toToken || exceedsBalance
+            }
             style={{
               background: "linear-gradient(45deg, #4DA2FF, #63C9B9)",
               borderRadius: "24px",

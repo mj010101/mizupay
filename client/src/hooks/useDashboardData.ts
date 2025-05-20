@@ -1,6 +1,6 @@
 import { useWallet } from "@suiet/wallet-kit";
 import { useEffect, useState } from "react";
-import { ZUSD_TYPE, SZUSD_TYPE, LBTC_TYPE } from "../suiConfig";
+import { MZUSD_TYPE, SMZUSD_TYPE, LBTC_TYPE } from "../suiConfig";
 import { suiClient } from "../utils/suiClient";
 import { fetchOnchainBTCPrice } from "../utils/contract";
 
@@ -28,7 +28,7 @@ async function getBTC24hChangePercent(): Promise<number | null> {
 
     // Fetch fresh data
     const res = await fetch(
-      "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
+      "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
     );
     const data = (await res.json()) as { priceChangePercent?: string };
     if (data.priceChangePercent !== undefined) {
@@ -36,7 +36,7 @@ async function getBTC24hChangePercent(): Promise<number | null> {
       // Cache the value with timestamp
       localStorage.setItem(
         BINANCE_BTC_CHANGE_CACHE_KEY,
-        JSON.stringify({ value, ts: Date.now() }),
+        JSON.stringify({ value, ts: Date.now() })
       );
       return value;
     }
@@ -94,11 +94,11 @@ export const useDashboardData = () => {
           await Promise.all([
             suiClient.getBalance({
               owner: account.address,
-              coinType: ZUSD_TYPE,
+              coinType: MZUSD_TYPE,
             }),
             suiClient.getBalance({
               owner: account.address,
-              coinType: SZUSD_TYPE,
+              coinType: SMZUSD_TYPE,
             }),
             suiClient.getBalance({
               owner: account.address,

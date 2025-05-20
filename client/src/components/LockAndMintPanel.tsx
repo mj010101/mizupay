@@ -15,6 +15,8 @@ import {
   fetchOnchainBTCPrice,
   buildDepositAndBorrowTx,
 } from "../utils/contract";
+import { suiClient } from "../utils/suiClient";
+import { LBTC_TYPE } from "../suiConfig";
 
 export function LockAndMintPanel() {
   const wallet = useWallet();
@@ -23,6 +25,7 @@ export function LockAndMintPanel() {
   const [usdAmount, setUsdAmount] = useState("");
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [fromBalance, setFromBalance] = useState<number | null>(null);
   const LTV = 0.7;
 
   useEffect(() => {
@@ -50,6 +53,36 @@ export function LockAndMintPanel() {
     }
   }, [btcAmount, btcPrice]);
 
+  useEffect(() => {
+    if (!connected || !address) {
+      setFromBalance(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchBalance = async () => {
+      try {
+        const bal = await suiClient.getBalance({
+          owner: address,
+          coinType: LBTC_TYPE,
+        });
+        if (cancelled) return;
+        setFromBalance(Number(bal.totalBalance) / 1e9); // assume 9 decimals
+      } catch (err) {
+        console.error("Failed to fetch LBTC balance", err);
+        if (!cancelled) setFromBalance(null);
+      }
+    };
+
+    fetchBalance();
+    const interval = setInterval(fetchBalance, 30000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [connected, address]);
+
   const handleLockAndMint = async () => {
     if (!connected) {
       alert("Please connect your wallet first");
@@ -63,7 +96,7 @@ export function LockAndMintPanel() {
       const tx = await buildDepositAndBorrowTx(
         address,
         parseFloat(btcAmount),
-        parseFloat(usdAmount),
+        parseFloat(usdAmount)
       );
 
       const result = await wallet.signAndExecuteTransactionBlock({
@@ -76,7 +109,7 @@ export function LockAndMintPanel() {
       setBtcAmount("");
       setUsdAmount("");
       alert(
-        `Successfully locked ${btcAmount} LBTC and minted ${usdAmount} mzUSD`,
+        `Successfully locked ${btcAmount} LBTC and minted ${usdAmount} mzUSD`
       );
     } catch (error: unknown) {
       console.error("Operation failed:", error);
@@ -87,6 +120,13 @@ export function LockAndMintPanel() {
       setIsProcessing(false);
     }
   };
+
+  const exceedsBalance = (() => {
+    if (fromBalance === null) return false; // unknown balance
+    const numeric = parseFloat(btcAmount);
+    if (isNaN(numeric)) return false;
+    return numeric > fromBalance;
+  })();
 
   return (
     <FeaturePanel>
@@ -115,14 +155,24 @@ export function LockAndMintPanel() {
         <Flex direction="row" gap="8" align="center">
           <Box style={{ flex: 1 }}>
             <Flex direction="column" gap="3">
-              <Text
-                as="label"
-                size="3"
-                weight="bold"
-                style={{ color: "#4DA2FF" }}
-              >
-                Lock LBTC as Collateral
-              </Text>
+              <Flex justify="between" align="baseline">
+                <Text
+                  as="label"
+                  size="3"
+                  weight="bold"
+                  style={{ color: "#4DA2FF" }}
+                >
+                  Lock LBTC as Collateral
+                </Text>
+                <Text size="2" color="gray">
+                  Balance:{" "}
+                  {fromBalance !== null
+                    ? fromBalance.toLocaleString(undefined, {
+                        maximumFractionDigits: 6,
+                      })
+                    : "-"}
+                </Text>
+              </Flex>
               <Flex gap="2" align="center">
                 <Box
                   style={{
@@ -270,7 +320,8 @@ export function LockAndMintPanel() {
               !btcAmount ||
               parseFloat(btcAmount) <= 0 ||
               !connected ||
-              isProcessing
+              isProcessing ||
+              exceedsBalance
             }
             onMouseEnter={(e) => {
               if (

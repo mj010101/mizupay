@@ -10,7 +10,7 @@ export function useCharge() {
   };
 
   const handleCharge = (amount: string, destination: "card" | "eoa") => {
-    console.log(`Charging ${amount} ZUSD to ${destination}`);
+    console.log(`Charging ${amount} MZUSD to ${destination}`);
     // Implement the actual charge logic here
   };
 
