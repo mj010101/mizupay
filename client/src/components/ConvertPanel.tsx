@@ -21,16 +21,16 @@ type TokenRates = {
   [key: string]: number;
 };
 
-type Mode = "btc" | "lusd";
+type Mode = "btc" | "mzUSD";
 
 const modeRatesMap: Record<Mode, TokenRates> = {
   btc: {
     "BTC-LBTC": 1,
     "LBTC-BTC": 1,
   },
-  lusd: {
-    "LUSD-sLUSD": 1,
-    "sLUSD-LUSD": 1,
+  mzUSD: {
+    "mzUSD-smzUSD": 1,
+    "smzUSD-mzUSD": 1,
   },
 };
 
@@ -57,13 +57,13 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
         setFromToken("LBTC");
         setToToken("BTC");
       }
-    } else if (mode === "lusd") {
+    } else if (mode === "mzUSD") {
       if (activeTab === "stake") {
-        setFromToken("LUSD");
-        setToToken("sLUSD");
+        setFromToken("mzUSD");
+        setToToken("smzUSD");
       } else {
-        setFromToken("sLUSD");
-        setToToken("LUSD");
+        setFromToken("smzUSD");
+        setToToken("mzUSD");
       }
     }
   }, [activeTab, mode]);
@@ -78,12 +78,12 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
     // szusdRatio is scaled by 1e4. Convert to floating multiplier.
     const ratio = szusdRatio / 1e4;
 
-    // If converting LUSD -> sLUSD (stake), rate = 1 / ratio (assuming ratio = sLUSD price in LUSD terms)
+    // If converting mzUSD -> smzUSD (stake), rate = 1 / ratio (assuming ratio = smzUSD price in mzUSD terms)
     // For symmetry we invert when needed.
-    if (fromToken === "LUSD" && toToken === "sLUSD") {
+    if (fromToken === "mzUSD" && toToken === "smzUSD") {
       return 1 / ratio;
     }
-    if (fromToken === "sLUSD" && toToken === "LUSD") {
+    if (fromToken === "smzUSD" && toToken === "mzUSD") {
       return ratio;
     }
     return 0;
@@ -95,9 +95,9 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
     return (parseFloat(amount) * rate).toFixed(6);
   };
 
-  // Fetch SZUSD price ratio periodically when mode is LUSD.
+  // Fetch SZUSD price ratio periodically when mode is mzUSD.
   useEffect(() => {
-    if (mode !== "lusd") return;
+    if (mode !== "mzUSD") return;
 
     const fetchRatio = async () => {
       const ratio = await fetchSZUSDPriceRatio();
@@ -144,7 +144,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
       alert(
         `Successfully ${
           activeTab === "stake" ? "staked" : "unstaked"
-        } ${amount} ${fromToken} to ${estimated} ${toToken}`
+        } ${amount} ${fromToken} to ${estimated} ${toToken}`,
       );
     } catch (error: unknown) {
       console.error("Swap failed:", error);

@@ -63,7 +63,7 @@ export function LockAndMintPanel() {
       const tx = await buildDepositAndBorrowTx(
         address,
         parseFloat(btcAmount),
-        parseFloat(usdAmount)
+        parseFloat(usdAmount),
       );
 
       const result = await wallet.signAndExecuteTransactionBlock({
@@ -76,7 +76,7 @@ export function LockAndMintPanel() {
       setBtcAmount("");
       setUsdAmount("");
       alert(
-        `Successfully locked ${btcAmount} LBTC and minted ${usdAmount} LUSD`
+        `Successfully locked ${btcAmount} LBTC and minted ${usdAmount} mzUSD`,
       );
     } catch (error: unknown) {
       console.error("Operation failed:", error);
@@ -196,7 +196,7 @@ export function LockAndMintPanel() {
                 weight="bold"
                 style={{ color: "#4DA2FF" }}
               >
-                Mint LUSD (70% LTV)
+                Mint mzUSD (70% LTV)
               </Text>
               <Flex gap="2" align="center">
                 <Box
@@ -211,10 +211,10 @@ export function LockAndMintPanel() {
                     border: "1px solid rgba(99, 201, 185, 0.2)",
                   }}
                 >
-                  {tokenIcons.LUSD.endsWith(".svg") ? (
+                  {tokenIcons.mzUSD.endsWith(".svg") ? (
                     <img
-                      src={tokenIcons.LUSD}
-                      alt="LUSD"
+                      src={tokenIcons.mzUSD}
+                      alt="mzUSD"
                       style={{
                         width: "20px",
                         height: "20px",
@@ -227,11 +227,11 @@ export function LockAndMintPanel() {
                       weight="medium"
                       style={{ marginRight: "8px" }}
                     >
-                      {tokenIcons.LUSD}
+                      {tokenIcons.mzUSD}
                     </Text>
                   )}
                   <Text size="3" weight="medium">
-                    LUSD
+                    mzUSD
                   </Text>
                 </Box>
                 <TextField.Root

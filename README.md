@@ -2,8 +2,8 @@
 
 Mizupay is a DeFi protocol built on Sui that enables users to:
 
-1. Deposit LBTC as collateral to mint LUSD stablecoins
-2. Stake LUSD tokens to receive sLUSD which is yield-bearing stablecoin
+1. Deposit LBTC as collateral to mint mzUSD stablecoins
+2. Stake mzUSD tokens to receive smzUSD which is yield-bearing stablecoin
 3. Use the yield to claim USDC upfront and use in payment
 
 ## Protocol Overview
@@ -12,16 +12,16 @@ Mizupay is a DeFi protocol built on Sui that enables users to:
 
 The vault program allows users to:
 
-- Deposit LBTC as collateral and mint LUSD stablecoins at a 70% loan-to-value ratio
-- Repay LUSD to unlock and withdraw their LBTC collateral
+- Deposit LBTC as collateral and mint mzUSD stablecoins at a 70% loan-to-value ratio
+- Repay mzUSD to unlock and withdraw their LBTC collateral
 - Maintain over-collateralization to prevent liquidation
 
 ### Staking Program
 
 The staking program enables users to:
 
-- Stake LUSD tokens and receive sLUSD tokens 1:1
-- Unstake by burning sLUSD tokens to receive back their LUSD
+- Stake mzUSD tokens and receive smzUSD tokens 1:1
+- Unstake by burning smzUSD tokens to receive back their mzUSD
 
 ### Client Application
 
@@ -59,19 +59,19 @@ pnpm dev
 
 ## Usage
 
-### Minting LUSD
+### Minting mzUSD
 
 1. Connect your wallet through the client interface
 2. Navigate to the Mint section
 3. Deposit LBTC as collateral
-4. Mint LUSD tokens (up to 70% of your collateral value)
+4. Mint mzUSD tokens (up to 70% of your collateral value)
 
-### Staking LUSD
+### Staking mzUSD
 
 1. Navigate to the Earn section
-2. Approve LUSD for staking
-3. Stake your LUSD to receive sLUSD tokens
-4. Unstake anytime by burning sLUSD tokens
+2. Approve mzUSD for staking
+3. Stake your mzUSD to receive smzUSD tokens
+4. Unstake anytime by burning smzUSD tokens
 
 ## Architecture
 
@@ -101,7 +101,7 @@ pnpm preview   # Preview production build
 
 ### Features
 
-- **Dashboard**: View your assets, accumulated yield, and staked LUSD management
+- **Dashboard**: View your assets, accumulated yield, and staked mzUSD management
 - **Deposit**: Convert BTC to LBTC
-- **Mint**: Lock LBTC and mint LUSD
-- **Earn**: Stake LUSD to earn yield with sLUSD
+- **Mint**: Lock LBTC and mint mzUSD
+- **Earn**: Stake mzUSD to earn yield with smzUSD

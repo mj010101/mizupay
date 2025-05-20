@@ -28,7 +28,7 @@ async function getBTC24hChangePercent(): Promise<number | null> {
 
     // Fetch fresh data
     const res = await fetch(
-      "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
+      "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
     );
     const data = (await res.json()) as { priceChangePercent?: string };
     if (data.priceChangePercent !== undefined) {
@@ -36,7 +36,7 @@ async function getBTC24hChangePercent(): Promise<number | null> {
       // Cache the value with timestamp
       localStorage.setItem(
         BINANCE_BTC_CHANGE_CACHE_KEY,
-        JSON.stringify({ value, ts: Date.now() })
+        JSON.stringify({ value, ts: Date.now() }),
       );
       return value;
     }
@@ -59,12 +59,12 @@ export const useDashboardData = () => {
       isPositive: true,
       dollarValue: undefined as string | undefined,
     },
-    LUSD: {
+    mzUSD: {
       value: "-",
       change: "-",
       isPositive: true,
     },
-    sLUSD: {
+    smzUSD: {
       value: "-",
       change: "-",
       isPositive: true,
@@ -79,8 +79,8 @@ export const useDashboardData = () => {
       setAssetData((prev) => ({
         ...prev,
         LBTC: { ...prev.LBTC, value: "-", change: "-", dollarValue: undefined },
-        LUSD: { ...prev.LUSD, value: "-", change: "-" },
-        sLUSD: { ...prev.sLUSD, value: "-", change: "-" },
+        mzUSD: { ...prev.mzUSD, value: "-", change: "-" },
+        smzUSD: { ...prev.smzUSD, value: "-", change: "-" },
       }));
       return;
     }
@@ -90,7 +90,7 @@ export const useDashboardData = () => {
     const fetchBalances = async () => {
       try {
         // Parallel fetches for efficiency
-        const [lusdBal, slusdBal, lbtcBal, btcPriceRaw, btcChangePercent] =
+        const [mzUSDBal, smzUSDBal, lbtcBal, btcPriceRaw, btcChangePercent] =
           await Promise.all([
             suiClient.getBalance({
               owner: account.address,
@@ -112,8 +112,8 @@ export const useDashboardData = () => {
 
         // Convert on-chain balances (u64) to decimals (assume 9 decimals)
         const DECIMALS = 1e9;
-        const lusdAmount = Number(lusdBal.totalBalance) / DECIMALS;
-        const slusdAmount = Number(slusdBal.totalBalance) / DECIMALS;
+        const mzUSDAmount = Number(mzUSDBal.totalBalance) / DECIMALS;
+        const smzUSDAmount = Number(smzUSDBal.totalBalance) / DECIMALS;
         const lbtcAmount = Number(lbtcBal.totalBalance) / DECIMALS;
 
         // Compute dollar value for LBTC using on-chain price if available
@@ -148,18 +148,18 @@ export const useDashboardData = () => {
             isPositive: btcIsPositive,
             dollarValue: lbtcDollarValue,
           },
-          LUSD: {
-            ...prev.LUSD,
-            value: `${lusdAmount.toLocaleString(undefined, {
+          mzUSD: {
+            ...prev.mzUSD,
+            value: `${mzUSDAmount.toLocaleString(undefined, {
               maximumFractionDigits: 2,
-            })} LUSD`,
+            })} mzUSD`,
             change: "-", // real-time change not yet implemented
           },
-          sLUSD: {
-            ...prev.sLUSD,
-            value: `${slusdAmount.toLocaleString(undefined, {
+          smzUSD: {
+            ...prev.smzUSD,
+            value: `${smzUSDAmount.toLocaleString(undefined, {
               maximumFractionDigits: 2,
-            })} sLUSD`,
+            })} smzUSD`,
             change: "-",
             // Optionally, we could add dollar equivalent here in the future
           },
@@ -198,7 +198,7 @@ export const useDashboardData = () => {
       amount: isConnected ? "$2,912" : "-",
       color: "#63C9B9",
     },
-    LUSDPool: {
+    mzUSDPool: {
       percentage: isConnected ? 20 : 0,
       apy: isConnected ? "12.3%" : "-",
       amount: isConnected ? "$1,664" : "-",

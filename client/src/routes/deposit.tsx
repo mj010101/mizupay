@@ -63,7 +63,7 @@ function Deposit() {
               }}
             >
               Deposit your native BTC to get LBTC tokens in return. These tokens
-              can be used as collateral to mint LUSD or for staking.
+              can be used as collateral to mint mzUSD or for staking.
             </Text>
           </Flex>
           <Flex justify="center" width="100%">

@@ -154,8 +154,8 @@ function Root() {
                   color: "#F1F7F7",
                 }}
               >
-                LUSD: the foremost yield-bearing stablecoin on Sui. Fully backed
-                by Bitcoin.
+                mzUSD: the foremost yield-bearing stablecoin on Sui. Fully
+                backed by Bitcoin.
               </Text>
 
               <Flex gap="4" mt="4">
@@ -288,7 +288,7 @@ function Root() {
                       fontWeight: "bold",
                     }}
                   >
-                    LUSD
+                    mzUSD
                   </Text>
                 </Box>
 
@@ -452,7 +452,7 @@ function Root() {
                   Asset Locking & Minting
                 </Heading>
                 <Text style={{ color: "#F1F7F7" }}>
-                  Lock LBTC as collateral and mint LUSD with a 70% LTV ratio
+                  Lock LBTC as collateral and mint mzUSD with a 70% LTV ratio
                 </Text>
               </Flex>
             </Card>
@@ -488,7 +488,7 @@ function Root() {
                   Staking Rewards
                 </Heading>
                 <Text style={{ color: "#F1F7F7" }}>
-                  Convert BTC to LBTC or LUSD to sLUSD to earn staking rewards
+                  Convert BTC to LBTC or mzUSD to smzUSD to earn staking rewards
                   up to 15%
                 </Text>
               </Flex>

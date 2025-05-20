@@ -62,12 +62,13 @@ function Earn() {
                 color: "#CEE3E4",
               }}
             >
-              Stake your LUSD to receive sLUSD tokens and earn yield over time.
-              Your funds are distributed across multiple high-performing vaults.
+              Stake your mzUSD to receive smzUSD tokens and earn yield over
+              time. Your funds are distributed across multiple high-performing
+              vaults.
             </Text>
           </Flex>
           <Flex justify="center" width="100%">
-            <ConvertPanel mode="lusd" />
+            <ConvertPanel mode="mzUSD" />
           </Flex>
         </Container>
       </Section>
