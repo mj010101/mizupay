@@ -5,6 +5,7 @@ edition = "2024.beta"
 
 [dependencies]
 # Sui dependency removed; it is automatically included by the Sui CLI
+Sui = { git = "https://github.com/MystenLabs/sui.git", rev = "fbb68879cbd1", subdir = "crates/sui-framework/packages/sui-framework" }
 # lbtc = { git = "https://github.com/lombard-finance/sui-move-contracts", subdir = "move/lbtc", rev = "main" }
 # consortium = { git = "https://github.com/lombard-finance/sui-move-contracts", subdir = "move/consortium", rev = "main" }
 # bascule = { git = "https://github.com/lombard-finance/sui-move-contracts", subdir = "move/bascule", rev = "main" }

@@ -250,7 +250,7 @@ module mizupay::vault {
         &mut staking_position.staked_amount
     }
 
-    public(package) fun zbtc_balance(vault: &Vault): &Balance<LBTC> {
+    public(package) fun lbtc_balance(vault: &Vault): &Balance<LBTC> {
         &vault.lbtc_balance
     }
 

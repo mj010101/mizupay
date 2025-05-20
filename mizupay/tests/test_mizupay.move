@@ -102,9 +102,9 @@ fun test_lending() {
     let scenario = &mut scenario_val;
 
     let ltv_ratio = 70;
-    let zbtc_price_in_zusd = 100000;
+    let lbtc_price_in_zusd = 100000;
 
-    init_config(scenario, ltv_ratio, zbtc_price_in_zusd);
+    init_config(scenario, ltv_ratio, lbtc_price_in_zusd);
     init_mint_and_vault(scenario);
 
     let deposit_amount = 100;
@@ -130,7 +130,7 @@ fun test_lending() {
         let vault = ts::take_shared<Vault>(scenario);
         let obligation = vault.get_obligation(scenario.ctx());
         assert!(obligation.lbtc_deposit() == deposit_amount, 0);
-        assert!(vault::zbtc_balance(&vault).value() == deposit_amount, 0);
+        assert!(vault::lbtc_balance(&vault).value() == deposit_amount, 0);
         ts::return_shared<Vault>(vault);
     };
 
@@ -237,9 +237,9 @@ fun test_staking() {
     let scenario = &mut scenario_val;
 
     let ltv_ratio = 70;
-    let zbtc_price_in_zusd = 100000;
+    let lbtc_price_in_zusd = 100000;
 
-    init_config(scenario, ltv_ratio, zbtc_price_in_zusd);
+    init_config(scenario, ltv_ratio, lbtc_price_in_zusd);
     init_mint_and_vault(scenario);
 
     let stake_amount = 1000;
