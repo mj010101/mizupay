@@ -147,9 +147,19 @@ module mizupay::lending {
         obligation: &Obligation,
     ): u64 {
         let padding_ratio = 5;
-        let collateral_value = obligation.lbtc_deposit() * mizupay::config::get_lbtc_price_in_mzusd(config);
-        let max_borrowable = (collateral_value * ((mizupay::config::get_ltv_ratio(config) as u64) - padding_ratio)) / 100;
-        max_borrowable - obligation.mzusd_borrowed()
+        let max_borrowable = obligation.lbtc_deposit() as u128 * (mizupay::config::get_lbtc_price_in_mzusd(config) as u128) * ((mizupay::config::get_ltv_ratio(config) - padding_ratio) as u128) / 100;
+        let max_borrowable_u64 = max_borrowable.try_as_u64();
+
+        if (max_borrowable_u64.is_none()) {
+            std::u64::max_value!() - obligation.mzusd_borrowed()
+        } else {
+            let max_borrowable_u64 = *max_borrowable_u64.borrow();
+            if (max_borrowable_u64 > obligation.mzusd_borrowed()) {
+                max_borrowable_u64 - obligation.mzusd_borrowed()
+        } else {
+            0
+        }
+        }
     }
 
     public(package) fun calculate_max_withdrawable(
