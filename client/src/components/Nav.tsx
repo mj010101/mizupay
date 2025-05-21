@@ -30,8 +30,8 @@ export function Nav() {
       <Flex gap="4" justify="between" align="center" height="100%">
         <Flex align="center" gap="2">
           <img
-            src="/zFuBao_logo.png"
-            alt="zFuBao Logo"
+            src="/mizupay_logo.svg"
+            alt="MizuPay Logo"
             width="144"
             height="38"
             style={{ marginRight: "8px" }}
