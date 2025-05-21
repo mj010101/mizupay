@@ -18,7 +18,7 @@ import {
 import { suiClient } from "../utils/suiClient";
 import { LBTC_TYPE } from "../suiConfig";
 
-export function LockAndMintPanel() {
+export function DepositAndBorrowPanel() {
   const wallet = useWallet();
   const { connected, address } = wallet;
   const [btcAmount, setBtcAmount] = useState("");
@@ -32,8 +32,7 @@ export function LockAndMintPanel() {
     const getPrice = async () => {
       const price = await fetchOnchainBTCPrice();
       if (price !== null) {
-        // On-chain price is stored with 9 decimals. Convert to floating number in USD.
-        setBtcPrice(price / 1e9);
+        setBtcPrice(price);
       }
     };
 
@@ -45,9 +44,11 @@ export function LockAndMintPanel() {
 
   useEffect(() => {
     if (btcAmount && btcPrice) {
+      console.log("btcAmount", btcAmount);
+      console.log("btcPrice", btcPrice);
       const valueInUSD = parseFloat(btcAmount) * btcPrice;
-      const mintableUSD = valueInUSD * LTV;
-      setUsdAmount(mintableUSD.toFixed(2));
+      const borrowableUSD = valueInUSD * LTV;
+      setUsdAmount(borrowableUSD.toFixed(2));
     } else {
       setUsdAmount("");
     }
@@ -83,7 +84,7 @@ export function LockAndMintPanel() {
     };
   }, [connected, address]);
 
-  const handleLockAndMint = async () => {
+  const handleDepositAndBorrow = async () => {
     if (!connected) {
       alert("Please connect your wallet first");
       return;
@@ -92,6 +93,9 @@ export function LockAndMintPanel() {
     setIsProcessing(true);
     try {
       if (!address) throw new Error("Wallet address not available");
+
+      console.log("btcAmount", btcAmount);
+      console.log("usdAmount", usdAmount);
 
       const tx = await buildDepositAndBorrowTx(
         address,
@@ -109,7 +113,7 @@ export function LockAndMintPanel() {
       setBtcAmount("");
       setUsdAmount("");
       alert(
-        `Successfully locked ${btcAmount} LBTC and minted ${usdAmount} mzUSD`
+        `Successfully deposited ${btcAmount} LBTC and borrowed ${usdAmount} mzUSD`
       );
     } catch (error: unknown) {
       console.error("Operation failed:", error);
@@ -162,7 +166,7 @@ export function LockAndMintPanel() {
                   weight="bold"
                   style={{ color: "#4DA2FF" }}
                 >
-                  Lock LBTC as Collateral
+                  Deposit LBTC as Collateral
                 </Text>
                 <Text size="2" color="gray">
                   Balance:{" "}
@@ -246,7 +250,7 @@ export function LockAndMintPanel() {
                 weight="bold"
                 style={{ color: "#4DA2FF" }}
               >
-                Mint mzUSD (70% LTV)
+                Borrow mzUSD (70% LTV)
               </Text>
               <Flex gap="2" align="center">
                 <Box
@@ -315,7 +319,7 @@ export function LockAndMintPanel() {
               padding: "0 20px",
               height: "50px",
             }}
-            onClick={handleLockAndMint}
+            onClick={handleDepositAndBorrow}
             disabled={
               !btcAmount ||
               parseFloat(btcAmount) <= 0 ||
@@ -344,8 +348,8 @@ export function LockAndMintPanel() {
             {isProcessing
               ? "Processing..."
               : connected
-              ? "Lock & Mint"
-              : "Connect Wallet to Lock & Mint"}
+              ? "Deposit & Borrow"
+              : "Connect Wallet to Deposit & Borrow"}
           </Button>
         </Box>
       </Card>

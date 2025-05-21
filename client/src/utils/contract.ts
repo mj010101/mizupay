@@ -154,7 +154,54 @@ export async function buildStakeTx(
     throw new Error("Insufficient MZUSD balance for the requested amount");
   }
 
+  // Check if the user has an existing staking position
+  let hasStakingPosition = false;
+  try {
+    // Query the staking position by checking the vault object
+    const vaultObj = await suiClient.getObject({
+      id: VAULT_ID,
+      options: {
+        showContent: true,
+      },
+    });
+
+    if (
+      vaultObj.data &&
+      vaultObj.data.content &&
+      "fields" in vaultObj.data.content
+    ) {
+      const stakingPositionMapping = (vaultObj.data.content as any).fields
+        .staking_position_mapping;
+      // Check if the user address exists in the staking position mapping
+      if (
+        stakingPositionMapping &&
+        stakingPositionMapping.fields &&
+        stakingPositionMapping.fields.contents
+      ) {
+        // The contents field is an array of key-value pairs
+        const contents = stakingPositionMapping.fields.contents;
+        for (const kvPair of contents) {
+          if (kvPair[0] === ownerAddress) {
+            hasStakingPosition = true;
+            break;
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error checking staking position:", error);
+    // If we can't determine, we'll try to create one anyway
+  }
+
   const txb = new Transaction();
+
+  // Only call open_staking_position if the user doesn't have a staking position
+  if (!hasStakingPosition) {
+    txb.moveCall({
+      target: `${PACKAGE_ID}::staking::open_staking_position`,
+      arguments: [txb.object(CONFIG_ID), txb.object(VAULT_ID)],
+    });
+  }
 
   const originalCoin = txb.object(suitableCoin.coinObjectId);
 

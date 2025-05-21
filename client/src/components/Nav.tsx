@@ -78,24 +78,26 @@ export function Nav() {
               Home
             </Link>
             <Link
-              to="/deposit"
+              to="https://www.lombard.finance/app/stake/"
               style={{
                 color: "var(--gray-12)",
                 textDecoration: "none",
                 fontWeight: 500,
               }}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Deposit
             </Link>
             <Link
-              to="/mint"
+              to="/borrow"
               style={{
                 color: "var(--gray-12)",
                 textDecoration: "none",
                 fontWeight: 500,
               }}
             >
-              Mint
+              Borrow
             </Link>
             <Link
               to="/earn"

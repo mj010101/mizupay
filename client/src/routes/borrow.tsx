@@ -1,8 +1,8 @@
-import { ConvertPanel } from "../components/ConvertPanel";
-import { Box, Container, Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { Footer } from "../components/Footer";
+import { DepositAndBorrowPanel } from "../components/DepositAndBorrowPanel";
+import { Box, Container, Flex, Heading, Section, Text } from "@radix-ui/themes";
 
-function Deposit() {
+function Borrow() {
   return (
     <Box
       style={{
@@ -34,7 +34,7 @@ function Deposit() {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Deposit
+            Borrow
           </Heading>
         </Container>
       </Section>
@@ -54,7 +54,7 @@ function Deposit() {
                 color: "#4DA2FF",
               }}
             >
-              Native BTC Deposits
+              Deposit & Borrow Assets
             </Heading>
             <Text
               size="3"
@@ -62,12 +62,13 @@ function Deposit() {
                 color: "#CEE3E4",
               }}
             >
-              Deposit your native BTC to get LBTC tokens in return. These tokens
-              can be used as collateral to mint mzUSD or for staking.
+              Deposit your LBTC as collateral and borrow mzUSD tokens. Your LBTC
+              will be deposited with a 70% LTV ratio to ensure stability of the
+              protocol.
             </Text>
           </Flex>
           <Flex justify="center" width="100%">
-            <ConvertPanel mode="btc" />
+            <DepositAndBorrowPanel />
           </Flex>
         </Container>
       </Section>
@@ -76,4 +77,4 @@ function Deposit() {
   );
 }
 
-export default Deposit;
+export default Borrow;

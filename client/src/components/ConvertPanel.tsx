@@ -47,9 +47,6 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
   const [amount, setAmount] = useState("");
   const [isSwapping, setIsSwapping] = useState(false);
 
-  // Dynamic SMZUSD price ratio fetched from chain (scaled by 1e4). Defaults to 1:1.
-  const [smzusdRatio, setSmzusdRatio] = useState<number>(10000);
-
   // --- New: balance state for the `from` token ---
   const [fromBalance, setFromBalance] = useState<number | null>(null);
 
@@ -80,17 +77,11 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
       return modeRatesMap[mode][key] || 0;
     }
 
-    // smzusdRatio is scaled by 1e4. Convert to floating multiplier.
-    const ratio = smzusdRatio / 1e4;
+    // For mzUSD mode, always use 1:1 ratio
+    if (mode === "mzUSD") {
+      return 1;
+    }
 
-    // If converting mzUSD -> smzUSD (stake), rate = 1 / ratio (assuming ratio = smzUSD price in mzUSD terms)
-    // For symmetry we invert when needed.
-    if (fromToken === "mzUSD" && toToken === "smzUSD") {
-      return 1 / ratio;
-    }
-    if (fromToken === "smzUSD" && toToken === "mzUSD") {
-      return ratio;
-    }
     return 0;
   };
 
@@ -101,20 +92,6 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
   };
 
   // Fetch SMZUSD price ratio periodically when mode is mzUSD.
-  useEffect(() => {
-    if (mode !== "mzUSD") return;
-
-    const fetchRatio = async () => {
-      const ratio = await fetchSMZUSDPriceRatio();
-      if (ratio !== null && ratio > 0) {
-        setSmzusdRatio(ratio);
-      }
-    };
-
-    fetchRatio();
-    const interval = setInterval(fetchRatio, 30000);
-    return () => clearInterval(interval);
-  }, [mode]);
 
   // Fetch the wallet balance for the currently selected `fromToken`
   useEffect(() => {

@@ -180,7 +180,7 @@ function Root() {
                   }}
                 >
                   <Link
-                    to="/mint"
+                    to="/borrow"
                     style={{ color: "inherit", textDecoration: "none" }}
                   >
                     Deposit Now
@@ -449,10 +449,11 @@ function Root() {
                     color: "#4DA2FF",
                   }}
                 >
-                  Asset Locking & Minting
+                  Asset Depositing & Borrowing
                 </Heading>
                 <Text style={{ color: "#F1F7F7" }}>
-                  Lock LBTC as collateral and mint mzUSD with a 70% LTV ratio
+                  Deposit LBTC as collateral and borrow mzUSD with a 70% LTV
+                  ratio
                 </Text>
               </Flex>
             </Card>
@@ -625,7 +626,7 @@ function Root() {
               }}
             >
               <Link
-                to="/mint"
+                to="/borrow"
                 style={{ color: "inherit", textDecoration: "none" }}
               >
                 Deposit Now
