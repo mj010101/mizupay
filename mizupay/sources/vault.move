@@ -6,6 +6,7 @@ module mizupay::vault {
     use mizupay::mzusd::MZUSD;
     use sui::balance::Balance;
     use sui::balance;
+    use sui::coin;
     use sui::table::{Self, Table};
 
     const EINVALID_AMOUNT: u64 = 1;
@@ -110,7 +111,7 @@ module mizupay::vault {
         assert!(ctx.sender() == vault.authority, EUNAUTHORIZED);
 
         let lbtc = balance::split(&mut vault.lbtc_balance, amount);
-        transfer::public_transfer(lbtc.into_coin(ctx), ctx.sender());
+        transfer::public_transfer(sui::coin::from_balance(lbtc, ctx), ctx.sender());
 
         emit(VaultLBTCBalanceUpdatedEvent {
             old_balance: balance::value(&vault.lbtc_balance),
@@ -135,7 +136,7 @@ module mizupay::vault {
         assert!(ctx.sender() == vault.authority, EUNAUTHORIZED);
         
         let mzusd = balance::split(&mut vault.mzusd_balance, amount);
-        transfer::public_transfer(mzusd.into_coin(ctx), ctx.sender());
+        transfer::public_transfer(coin::from_balance(mzusd, ctx), ctx.sender());
 
         emit(VaultMZUSDBalanceUpdatedEvent {
             old_balance: balance::value(&vault.mzusd_balance),

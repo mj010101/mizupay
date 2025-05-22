@@ -13,9 +13,6 @@ use mizupay::lbtc::LBTC;
 use mizupay::lending::{Self, calculate_max_borrowable, calculate_max_withdrawable};
 use mizupay::staking;
 use sui::coin::Coin;
-use std::unit_test::assert_eq;
-use std::debug::print;
-use std::string;
 
 const ADMIN_USER: address = @0x1;
 const USER: address = @0x2;
@@ -149,9 +146,9 @@ fun test_lending() {
         {
             let obligation = vault.get_obligation(scenario.ctx());
             let zusd_borrowable_amount_after = calculate_max_borrowable(&config, obligation);
-            assert_eq!(zusd_borrowable_amount_after, 0);
+            assert!(zusd_borrowable_amount_after == 0, 0);
             let withdrawable_amount = calculate_max_withdrawable(&config, obligation);
-            assert_eq!(withdrawable_amount, 0);
+            assert!(withdrawable_amount == 0, 0);
         };  
 
         ts::return_shared<Vault>(vault);

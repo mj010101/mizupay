@@ -6,10 +6,7 @@ module mizupay::staking {
     use mizupay::mzusd::MZUSD;
     use mizupay::vault::Vault;
     use mizupay::smzusd::SMZUSD;
-    use sui::config;
     use mizupay::config::get_smzusd_price_ratio;
-    use std::uq32_32;
-    use std::debug::print;
 
     const EINSUFFICIENT_BALANCE: u64 = 1;
     const EINVALID_AMOUNT: u64 = 2;
@@ -126,7 +123,7 @@ module mizupay::staking {
         let vault_mzusd_balance = vault.get_mut_mzusd_balance();
         assert!(balance::value(vault_mzusd_balance) >= amount, EINSUFFICIENT_MZUSD_IN_VAULT);
         let interest_amount = amount * get_smzusd_price_ratio(config) / 1_000_000_000;
-        let mzusd_coin = balance::split(vault_mzusd_balance, amount).into_coin(ctx);
+        let mzusd_coin = coin::from_balance(balance::split(vault_mzusd_balance, amount), ctx);
         transfer::public_transfer(mzusd_coin, ctx.sender());
         mizupay::mzusd::mint(vault.get_mzusd_treasury_cap(), interest_amount, ctx.sender(), ctx);
     }
