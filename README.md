@@ -121,3 +121,8 @@ pnpm preview   # Preview production build
 - **Deposit**: Convert BTC to LBTC
 - **Mint**: Lock LBTC and mint mzUSD
 - **Earn**: Stake mzUSD to earn yield with smzUSD
+
+---
+
+![image](https://github.com/user-attachments/assets/8717ed2e-d44f-4863-bbd2-e7bf167367b4)
+
