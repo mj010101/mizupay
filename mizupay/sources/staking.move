@@ -5,6 +5,11 @@ module mizupay::staking {
     use sui::balance;
     use mizupay::mzusd::MZUSD;
     use mizupay::vault::Vault;
+    use mizupay::smzusd::SMZUSD;
+    use sui::config;
+    use mizupay::config::get_smzusd_price_ratio;
+    use std::uq32_32;
+    use std::debug::print;
 
     const EINSUFFICIENT_BALANCE: u64 = 1;
     const EINVALID_AMOUNT: u64 = 2;
@@ -41,12 +46,17 @@ module mizupay::staking {
     }
 
     public entry fun close_staking_position(
-        _config: &MizuPayConfig,
+        config: &MizuPayConfig,
         vault: &mut Vault,
+        smzusd_coin: Coin<SMZUSD>,
         ctx: &mut TxContext
     ) {
-        let staking_position = vault.get_staking_position(ctx);
-        user_withdraw_mzusd(vault, staking_position.staked_amount(), ctx);
+        let amount = coin::value(&smzusd_coin);
+        let staking_amount = vault.get_staking_position(ctx).staked_amount();
+        assert!(amount == staking_amount, EINVALID_AMOUNT);
+
+        user_withdraw_mzusd(vault, staking_amount,  config, ctx);
+        coin::burn(vault.get_smzusd_treasury_cap(), smzusd_coin);
         vault.delete_staking_position(ctx);
 
         emit(CloseStakingPositionEvent {
@@ -69,9 +79,10 @@ module mizupay::staking {
         let staked_amount = staking_position.staked_amount_mut();
         *staked_amount = *staked_amount + amount;
 
-        let mzusd_balance = vault.get_mut_mzusd_balance();
-        balance::join(mzusd_balance, mzusd_coin.into_balance());
+        let vault_mzusd_balance = vault.get_mut_mzusd_balance();
+        balance::join(vault_mzusd_balance, mzusd_coin.into_balance());
 
+        mizupay::smzusd::mint(vault.get_smzusd_treasury_cap(), amount, tx_context::sender(ctx), ctx);
 
         emit(StakeEvent {
             user: tx_context::sender(ctx),
@@ -80,14 +91,18 @@ module mizupay::staking {
     }
 
     public entry fun unstake(
-        _config: &MizuPayConfig,
+        config: &MizuPayConfig,
         vault: &mut Vault,
-        amount: u64,
+        smzusd_coin: Coin<SMZUSD>,
         ctx: &mut TxContext
     ) {
+        let amount = coin::value(&smzusd_coin);
+        let staking_amount = vault.get_staking_position(ctx).staked_amount();
         assert!(amount > 0, EINVALID_AMOUNT);
+        assert!(amount <= staking_amount, EINSUFFICIENT_BALANCE);
 
-        user_withdraw_mzusd(vault, amount, ctx);
+        user_withdraw_mzusd(vault, amount, config, ctx);
+        coin::burn(vault.get_smzusd_treasury_cap(), smzusd_coin);
 
         emit(UnstakeEvent {
             user: tx_context::sender(ctx),
@@ -99,6 +114,7 @@ module mizupay::staking {
     fun user_withdraw_mzusd(
         vault: &mut Vault,
         amount: u64,
+        config: &MizuPayConfig,
         ctx: &mut TxContext
     ) {
         let staking_position = vault.get_staking_position_mut(ctx);
@@ -107,11 +123,12 @@ module mizupay::staking {
         let staked_amount = staking_position.staked_amount_mut();
         *staked_amount = *staked_amount - amount;
 
-        let mzusd_balance = vault.get_mut_mzusd_balance();
-        assert!(balance::value(mzusd_balance) >= amount, EINSUFFICIENT_MZUSD_IN_VAULT);
-
-        let mzusd_coin = balance::split(mzusd_balance, amount).into_coin(ctx);
+        let vault_mzusd_balance = vault.get_mut_mzusd_balance();
+        assert!(balance::value(vault_mzusd_balance) >= amount, EINSUFFICIENT_MZUSD_IN_VAULT);
+        let interest_amount = amount * get_smzusd_price_ratio(config) / 1_000_000_000;
+        let mzusd_coin = balance::split(vault_mzusd_balance, amount).into_coin(ctx);
         transfer::public_transfer(mzusd_coin, ctx.sender());
+        mizupay::mzusd::mint(vault.get_mzusd_treasury_cap(), interest_amount, ctx.sender(), ctx);
     }
 
 }
