@@ -28,7 +28,7 @@ async function getBTC24hChangePercent(): Promise<number | null> {
 
     // Fetch fresh data
     const res = await fetch(
-      "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT"
+      "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT",
     );
     const data = (await res.json()) as { priceChangePercent?: string };
     if (data.priceChangePercent !== undefined) {
@@ -36,7 +36,7 @@ async function getBTC24hChangePercent(): Promise<number | null> {
       // Cache the value with timestamp
       localStorage.setItem(
         BINANCE_BTC_CHANGE_CACHE_KEY,
-        JSON.stringify({ value, ts: Date.now() })
+        JSON.stringify({ value, ts: Date.now() }),
       );
       return value;
     }
@@ -186,21 +186,21 @@ export const useDashboardData = () => {
   };
 
   const vaultData = {
-    drift: {
-      percentage: isConnected ? 45 : 0,
-      apy: isConnected ? "16.8%" : "-",
+    bluefin: {
+      percentage: isConnected ? 50 : 0,
+      apy: isConnected ? "12.97%" : "-",
       amount: isConnected ? "$3,741" : "-",
       color: "#4DA2FF",
     },
-    kamino: {
-      percentage: isConnected ? 35 : 0,
-      apy: isConnected ? "14.5%" : "-",
+    Suilend: {
+      percentage: isConnected ? 20 : 0,
+      apy: isConnected ? "3.03%" : "-",
       amount: isConnected ? "$2,912" : "-",
       color: "#63C9B9",
     },
     mzUSDPool: {
-      percentage: isConnected ? 20 : 0,
-      apy: isConnected ? "12.3%" : "-",
+      percentage: isConnected ? 30 : 0,
+      apy: isConnected ? "11.59%" : "-",
       amount: isConnected ? "$1,664" : "-",
       color: "#2E5A5A",
     },

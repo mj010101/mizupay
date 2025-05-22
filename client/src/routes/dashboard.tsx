@@ -529,7 +529,7 @@ function Dashboard() {
                           <Box
                             style={{
                               height: "100%",
-                              width: `${vaultData.drift.percentage}%`,
+                              width: `${vaultData.bluefin.percentage}%`,
                               background: "#4DA2FF",
                               borderRadius: "10px 0 0 10px",
                             }}
@@ -537,7 +537,7 @@ function Dashboard() {
                           <Box
                             style={{
                               height: "100%",
-                              width: `${vaultData.kamino.percentage}%`,
+                              width: `${vaultData.Suilend.percentage}%`,
                               background: "#63C9B9",
                             }}
                           />
@@ -580,7 +580,7 @@ function Dashboard() {
                               }}
                             />
                             <Text size="1" style={{ color: "#4DA2FF" }}>
-                              Drift ({vaultData.drift.percentage}%)
+                              Bluefin ({vaultData.bluefin.percentage}%)
                             </Text>
                           </Flex>
                           <Flex align="center" gap="1">
@@ -593,7 +593,7 @@ function Dashboard() {
                               }}
                             />
                             <Text size="1" style={{ color: "#63C9B9" }}>
-                              Kamino ({vaultData.kamino.percentage}%)
+                              Suilend ({vaultData.Suilend.percentage}%)
                             </Text>
                           </Flex>
                           <Flex align="center" gap="1">
@@ -622,28 +622,28 @@ function Dashboard() {
 
               <Grid columns={{ initial: "1", sm: "3" }} gap="6">
                 <VaultCard
-                  title="Drift Vault"
-                  percentage={vaultData.drift.percentage}
-                  apy={vaultData.drift.apy}
-                  amount={vaultData.drift.amount}
-                  color={vaultData.drift.color}
-                  link="https://app.drift.trade/vaults/strategy-vaults"
+                  title="Bluefin Vault"
+                  percentage={vaultData.bluefin.percentage}
+                  apy={vaultData.bluefin.apy}
+                  amount={vaultData.bluefin.amount}
+                  color={vaultData.bluefin.color}
+                  link="https://trade.bluefin.io/pools"
                 />
                 <VaultCard
-                  title="Kamino Vault"
-                  percentage={vaultData.kamino.percentage}
-                  apy={vaultData.kamino.apy}
-                  amount={vaultData.kamino.amount}
-                  color={vaultData.kamino.color}
-                  link="https://app.kamino.finance/liquidity?search=zbtc&filter=all&sort=tvl"
+                  title="SuiLend Vault"
+                  percentage={vaultData.Suilend.percentage}
+                  apy={vaultData.Suilend.apy}
+                  amount={vaultData.Suilend.amount}
+                  color={vaultData.Suilend.color}
+                  link="https://suilend.fi/"
                 />
                 <VaultCard
-                  title="mzUSD Pool"
+                  title="mzUSD Bucket"
                   percentage={vaultData.mzUSDPool.percentage}
                   apy={vaultData.mzUSDPool.apy}
                   amount={vaultData.mzUSDPool.amount}
                   color={vaultData.mzUSDPool.color}
-                  link="https://www.orca.so/pools?tokens=zBTCug3er3tLyffELcvDNrKkCymbPWysGcWihESYfLg"
+                  link="https://app.bucketprotocol.io/earn/stable?token=USDC"
                 />
               </Grid>
             </Box>
