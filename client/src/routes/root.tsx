@@ -133,19 +133,29 @@ function Root() {
                 Earn, Pay, and Live with your Bitcoin
               </Heading>
 
-              <Text
-                size={{ initial: "7", xs: "7" }}
-                style={{
-                  maxWidth: "800px",
-                  background: "linear-gradient(90deg, #4DA2FF, #63C9B9)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  fontWeight: "500",
-                  marginTop: "-8px",
-                }}
-              >
-                Powered by LBTC on Sui
-              </Text>
+              <Flex gap="3" align="center">
+                <Text
+                  size={{ initial: "7", xs: "7" }}
+                  style={{
+                    background: "linear-gradient(90deg, #4DA2FF, #63C9B9)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    fontWeight: "500",
+                  }}
+                >
+                  Powered by
+                </Text>
+                <img
+                  src="/lombard-logo.svg"
+                  alt="Lombard Logo"
+                  style={{ height: "28px" }}
+                />
+                <img
+                  src="/pyth-logo.svg"
+                  alt="Pyth Logo"
+                  style={{ height: "28px" }}
+                />
+              </Flex>
 
               <Text
                 size={{ initial: "4", xs: "5" }}
