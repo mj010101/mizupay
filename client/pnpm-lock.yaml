@@ -11,9 +11,6 @@ importers:
       '@mysten/sui':
         specifier: ^1.29.1
         version: 1.29.1(typescript@5.8.3)
-      '@netlify/plugin-nextjs':
-        specifier: ^5.11.2
-        version: 5.11.2
       '@radix-ui/react-dropdown-menu':
         specifier: 2.1.6
         version: 2.1.6(@types/react-dom@19.1.1(@types/react@19.1.0))(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -943,10 +940,6 @@ packages:
 
   '@mysten/zksend@0.11.0':
     resolution: {integrity: sha512-Q44ljYpH2Om8kOu/P+gxhZjFh8HgGXM3fdvpv3u0Fh+IbZW0ypv6G2RGDwldWBXY+pYO4xVpxres8QfC4CzALQ==}
-
-  '@netlify/plugin-nextjs@5.11.2':
-    resolution: {integrity: sha512-9Hgd/J5nP2U/Vv0teytq9uUAGppiKV9t5tzpsuMLqeqUGD9STxXwKmyZd2v8Z4THSW9rw4+8w7dH7LVlFoym2A==}
-    engines: {node: '>=18.0.0'}
 
   '@noble/curves@1.9.1':
     resolution: {integrity: sha512-k11yZxZg+t+gWvBbIswW0yoJlu8cHOC7dhunwOzoWH/mXGBiYyR4YY6hAEK/3EUs4UpB8la1RfdRpeGsFHkWsA==}
@@ -4032,8 +4025,6 @@ snapshots:
       - '@gql.tada/svelte-support'
       - '@gql.tada/vue-support'
       - typescript
-
-  '@netlify/plugin-nextjs@5.11.2': {}
 
   '@noble/curves@1.9.1':
     dependencies:
