@@ -85,7 +85,7 @@ export function ChargeModal({
                   onClick={() => setDestination("card")}
                 >
                   <CardStackIcon style={{ marginRight: "8px" }} />
-                  To Card (KAST)
+                  To Card (xMoney)
                 </Button>
                 <Button
                   size="3"
