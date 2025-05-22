@@ -79,6 +79,22 @@ pnpm dev
 
 - Sui Move modules for vault and staking functionality
 
+### Price Oracle (Pyth)
+
+Mizupay integrates **[Pyth Network](https://pyth.network)** to fetch the on-chain BTC/USD price that secures the protocol's LTV calculations.
+
+* On every `deposit & borrow` action the client app
+  1. Queries the Hermes service for the latest BTC/USD price-feed update.
+  2. Injects that update into the same transaction via `SuiPythClient.updatePriceFeeds`, obtaining a fresh `PriceInfoObject` id.
+  3. Passes the returned `PriceInfoObject` to the `lending::borrow` Move entry-function, ensuring all collateral checks rely on the most up-to-date oracle data.
+
+* The Move module `lending.move` uses the supplied `PriceInfoObject` (and a time-stamp-verified `Clock`) to
+  - calculate `max_borrowable` and `max_withdrawable`,
+  - validate collateral ratios,
+  - and remain oracle-agnostic (any asset supported by Pyth can be added in the future).
+
+This design removes any need for off-chain price pushers—the oracle update and user operation are executed atomically in a single transaction.
+
 ### Client
 
 The client application provides a user-friendly interface to interact with the Sui modules, handling:
