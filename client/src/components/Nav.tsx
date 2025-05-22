@@ -122,7 +122,40 @@ export function Nav() {
           </Flex>
 
           <Flex gap="2">
-            <ConnectButton />
+            <Box
+              style={{
+                overflow: "hidden",
+                borderRadius: "20px",
+                boxShadow: "0 4px 14px rgba(77, 162, 255, 0.4)",
+                transition: "transform 0.2s, box-shadow 0.2s",
+                width: "auto",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow =
+                  "0 6px 20px rgba(77, 162, 255, 0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "none";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 14px rgba(77, 162, 255, 0.4)";
+              }}
+            >
+              <ConnectButton
+                style={{
+                  background: "linear-gradient(45deg, #4DA2FF, #63C9B9)",
+                  color: "white",
+                  padding: "8px 14px",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  border: "none",
+                  minWidth: "120px",
+                  width: "fit-content",
+                }}
+              >
+                Connect Wallet
+              </ConnectButton>
+            </Box>
           </Flex>
         </Flex>
       </Flex>
