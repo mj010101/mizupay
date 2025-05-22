@@ -167,9 +167,10 @@ function Root() {
                 style={{
                   maxWidth: "600px",
                   color: "#F1F7F7",
+                  whiteSpace: "pre-line",
                 }}
               >
-                mzUSD: the foremost yield-bearing stablecoin on Sui. Fully
+                mzUSD: the foremost yield-bearing stablecoin {"\n"}on Sui. Fully
                 backed by Bitcoin.
               </Text>
 
@@ -263,7 +264,7 @@ function Root() {
             />
             <MetricCard
               label="APY"
-              value="15.2%"
+              value="9.10%"
               description="Annual Percentage Yield"
             />
             <MetricCard
