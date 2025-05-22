@@ -226,7 +226,7 @@ export function DepositAndBorrowPanel() {
               </Flex>
               {btcPrice && (
                 <Text size="2" style={{ color: "#CEE3E4" }}>
-                  1 BTC = ${btcPrice.toFixed(2)} USD
+                  1 BTC = ${btcPrice.toLocaleString()} USD
                 </Text>
               )}
             </Flex>
