@@ -17,6 +17,16 @@ import {
 } from "../utils/contract";
 import { suiClient } from "../utils/suiClient";
 import { LBTC_TYPE } from "../suiConfig";
+import {
+  WORMHOLE_STATE_ID,
+  PYTH_STATE_ID,
+  PYTH_PRICE_ID_BTCUSD,
+} from "../suiConfig";
+import {
+  SuiPriceServiceConnection,
+  SuiPythClient,
+} from "@pythnetwork/pyth-sui-js";
+import { Transaction } from "@mysten/sui/transactions";
 
 export function DepositAndBorrowPanel() {
   const wallet = useWallet();
@@ -94,18 +104,71 @@ export function DepositAndBorrowPanel() {
     try {
       if (!address) throw new Error("Wallet address not available");
 
-      console.log("btcAmount", btcAmount);
-      console.log("usdAmount", usdAmount);
+      const numericBtc = parseFloat(btcAmount);
+      const numericUsd = parseFloat(usdAmount);
+      if (isNaN(numericBtc) || isNaN(numericUsd) || numericBtc <= 0) {
+        throw new Error("Invalid input amounts");
+      }
 
-      const tx = await buildDepositAndBorrowTx(
-        address,
-        parseFloat(btcAmount),
-        parseFloat(usdAmount)
+      // ------------------------------------------------------------------
+      // 1. Prepare the price feed update using Pyth network utilities
+      // ------------------------------------------------------------------
+      const connection = new SuiPriceServiceConnection(
+        "https://hermes-beta.pyth.network"
       );
 
+      const priceIDs = [PYTH_PRICE_ID_BTCUSD];
+
+      // Fetch the update data from the Hermes server
+      const priceFeedUpdateData = await connection.getPriceFeedsUpdateData(
+        priceIDs
+      );
+
+      // Use the global Sui client as the provider for `SuiPythClient`
+      const pythClient = new SuiPythClient(
+        suiClient as any,
+        PYTH_STATE_ID,
+        WORMHOLE_STATE_ID
+      );
+
+      // The transaction block that will contain all operations
+      const tx = new Transaction();
+
+      // Inject the price feed updates into the transaction block and obtain
+      // the on-chain `PriceInfoObject` ids.
+      const priceInfoObjectIds: string[] = await pythClient.updatePriceFeeds(
+        tx as any,
+        priceFeedUpdateData,
+        priceIDs
+      );
+
+      if (!priceInfoObjectIds.length) {
+        throw new Error("Failed to obtain price info object id from Pyth");
+      }
+
+      console.log("priceInfoObjectIds", priceInfoObjectIds);
+
+      // ------------------------------------------------------------------
+      // 2. Append the deposit + borrow calls into the same transaction block
+      // ------------------------------------------------------------------
+      await buildDepositAndBorrowTx(
+        address,
+        numericBtc,
+        numericUsd,
+        priceInfoObjectIds[0],
+        tx as any
+      );
+
+      // ------------------------------------------------------------------
+      // 3. Sign and execute the composed transaction block
+      // ------------------------------------------------------------------
       const result = await wallet.signAndExecuteTransactionBlock({
-        // Casting to any to avoid potential version mismatch of the Transaction type across packages.
+        // Casting to `any` to avoid potential version mismatch across packages.
         transactionBlock: tx as any,
+        options: {
+          showEffects: true,
+          showEvents: true,
+        },
       });
 
       console.log("Tx result", result);

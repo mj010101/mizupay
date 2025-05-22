@@ -6,28 +6,22 @@ import {
   PACKAGE_ID,
   LBTC_TYPE,
   MZUSD_TYPE,
+  SUI_CLOCK_ID,
 } from "../suiConfig";
 
-// Read the BTC price (LBTC price in MZUSD) from the on-chain config object.
+// Fetch the BTC/USD price from Binance public API
 export async function fetchOnchainBTCPrice(): Promise<number | null> {
   try {
-    const obj = await suiClient.getObject({
-      id: CONFIG_ID,
-      options: {
-        showContent: true,
-      },
-    });
-
-    if (obj.data && obj.data.content && "fields" in obj.data.content) {
-      // price is stored in the `lbtc_price_in_mzusd` field as a u64.
-      const priceStr = (obj.data.content as any).fields
-        .lbtc_price_in_mzusd as string;
-      const price = Number(priceStr);
-      return price;
+    const response = await fetch(
+      "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return null;
+    const data = await response.json();
+    return Number(data.price);
   } catch (e) {
-    console.error("failed to fetch on-chain price", e);
+    console.error("failed to fetch Binance BTC price", e);
     return null;
   }
 }
@@ -36,11 +30,16 @@ export async function fetchOnchainBTCPrice(): Promise<number | null> {
 export async function buildDepositAndBorrowTx(
   ownerAddress: string,
   lbtcAmountDecimal: number,
-  borrowAmountDecimal: number
+  borrowAmountDecimal: number,
+  priceInfoObjectId: string,
+  txb?: Transaction
 ): Promise<Transaction> {
   // Convert decimals to on-chain smallest units (assuming 9 decimals)
   const lbtcAmount = Math.floor(lbtcAmountDecimal * 1e9);
   const borrowAmount = Math.floor(borrowAmountDecimal * 1e9);
+
+  // Re-use the supplied transaction block if provided. Otherwise create a new one.
+  const tx = txb ?? new Transaction();
 
   // Fetch a coin object that has enough LBTC balance.
   const coins = await suiClient.getCoins({
@@ -60,12 +59,12 @@ export async function buildDepositAndBorrowTx(
     throw new Error("Insufficient LBTC balance for the requested amount");
   }
 
-  const txb = new Transaction();
+  // Either use the provided tx block or create a new one above. From here on we only mutate `tx`.
 
-  const originalCoin = txb.object(suitableCoin.coinObjectId);
+  const originalCoin = tx.object(suitableCoin.coinObjectId);
 
   // Split out the exact amount needed so we only deposit the requested size
-  const depositCoin = txb.splitCoins(originalCoin, [txb.pure.u64(lbtcAmount)]);
+  const depositCoin = tx.splitCoins(originalCoin, [tx.pure.u64(lbtcAmount)]);
 
   // deposit_collateral(
   //   _config: &MizuPayConfig,
@@ -74,34 +73,38 @@ export async function buildDepositAndBorrowTx(
   //   amount: u64,
   //   ctx: &mut TxContext
   // )
-  txb.moveCall({
+  tx.moveCall({
     target: `${PACKAGE_ID}::lending::deposit_collateral`,
     arguments: [
-      txb.object(CONFIG_ID),
-      txb.object(VAULT_ID),
+      tx.object(CONFIG_ID),
+      tx.object(VAULT_ID),
       depositCoin,
-      txb.pure.u64(lbtcAmount),
+      tx.pure.u64(lbtcAmount),
     ],
   });
 
   // borrow(
   //   config: &MizuPayConfig,
   //   vault: &mut Vault,
+  //   clock: &Clock,
+  //   price_info_object: &PriceInfoObject,
   //   amount: u64,
   //   ctx: &mut TxContext
   // )
-  txb.moveCall({
+  tx.moveCall({
     target: `${PACKAGE_ID}::lending::borrow`,
     arguments: [
-      txb.object(CONFIG_ID),
-      txb.object(VAULT_ID),
-      txb.pure.u64(borrowAmount),
+      tx.object(CONFIG_ID),
+      tx.object(VAULT_ID),
+      tx.object(SUI_CLOCK_ID),
+      tx.object(priceInfoObjectId),
+      tx.pure.u64(borrowAmount),
     ],
   });
 
-  txb.setGasBudget(100000000); // adjust as needed
+  tx.setGasBudget(100000000); // adjust as needed
 
-  return txb;
+  return tx;
 }
 
 // Read the SMZUSD price ratio (scaled by 1e4) from the on-chain config object.
