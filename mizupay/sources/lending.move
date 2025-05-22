@@ -1,9 +1,12 @@
 module mizupay::lending {
     // Error codes
+    use pyth::price_info::PriceInfoObject;
+    use mizupay::pyth_util;
     use mizupay::config::MizuPayConfig;
     use sui::coin::{Self, Coin};
     use sui::event::emit;
     use sui::balance::{Self};
+    use sui::clock::Clock;
     use mizupay::lbtc::LBTC;
     use mizupay::mzusd::MZUSD;
     use mizupay::vault::Vault;
@@ -63,6 +66,8 @@ module mizupay::lending {
     public entry fun withdraw_collateral(
         config: &MizuPayConfig,
         vault: &mut Vault,
+        clock: &Clock,
+        price_info_object: &PriceInfoObject,
         amount: u64,
         ctx: &mut TxContext
     ) {
@@ -70,7 +75,7 @@ module mizupay::lending {
         assert!(amount > 0, EINVALID_AMOUNT);
         assert!(obligation.lbtc_deposit() >= amount, EINSUFFICIENT_COLLATERAL);
 
-        let max_withdrawable = calculate_max_withdrawable(config, obligation);
+        let max_withdrawable = calculate_max_withdrawable(clock, price_info_object, config, obligation);
         assert!(amount <= max_withdrawable, EINSUFFICIENT_COLLATERAL);
 
         let lbtc_deposit_amount = obligation.lbtc_deposit_mut();
@@ -83,7 +88,7 @@ module mizupay::lending {
         assert!(balance::value(vault_lbtc_balance) >= amount, EINSUFFICIENT_LBTC_IN_VAULT);
         
         let lbtc_coin = balance::split(vault_lbtc_balance, amount);
-        transfer::public_transfer(lbtc_coin.into_coin(ctx), tx_context::sender(ctx));
+        transfer::public_transfer(coin::from_balance(lbtc_coin, ctx), tx_context::sender(ctx));
 
 
         emit(WithdrawEvent {
@@ -95,6 +100,8 @@ module mizupay::lending {
     public entry fun borrow(
         config: &MizuPayConfig,
         vault: &mut Vault,
+        clock: &Clock,
+        price_info_object: &PriceInfoObject,
         amount: u64,
         ctx: &mut TxContext
     ) {
@@ -102,7 +109,7 @@ module mizupay::lending {
         assert!(amount > 0, EINVALID_AMOUNT);
         let obligation = vault.get_obligation_mut(ctx);
         
-        let max_borrowable = calculate_max_borrowable(config, obligation);
+        let max_borrowable = calculate_max_borrowable(clock, price_info_object, config, obligation);
         assert!(amount <= max_borrowable, EINSUFFICIENT_COLLATERAL);
 
         let mzusd_borrowed_amount = obligation.mzusd_borrowed_mut();
@@ -143,33 +150,39 @@ module mizupay::lending {
 
     // Helper functions
     public(package) fun calculate_max_borrowable(
+        clock: &Clock,
+        price_info_object: &PriceInfoObject,
         config: &MizuPayConfig,
         obligation: &Obligation,
     ): u64 {
         let padding_ratio = 5;
-        let max_borrowable = obligation.lbtc_deposit() as u128 * (mizupay::config::get_lbtc_price_in_mzusd(config) as u128) * ((mizupay::config::get_ltv_ratio(config) - padding_ratio) as u128) / 100;
-        let max_borrowable_u64 = max_borrowable.try_as_u64();
+        let max_borrowable = obligation.lbtc_deposit() as u128 * (pyth_util::get_price(clock, price_info_object) as u128) * ((mizupay::config::get_ltv_ratio(config) - padding_ratio) as u128) / 100;
+        let u64_max = (1 as u128) << 64 - 1;
 
-        if (max_borrowable_u64.is_none()) {
-            std::u64::max_value!() - obligation.mzusd_borrowed()
+        let mut max_borrowable_u64 = 0;
+        if (max_borrowable > u64_max) {
+            max_borrowable_u64 = u64_max as u64;
         } else {
-            let max_borrowable_u64 = *max_borrowable_u64.borrow();
-            if (max_borrowable_u64 > obligation.mzusd_borrowed()) {
-                max_borrowable_u64 - obligation.mzusd_borrowed()
+            max_borrowable_u64 = max_borrowable as u64;
+        };
+
+        if (max_borrowable_u64 > obligation.mzusd_borrowed()) {
+            max_borrowable_u64 - obligation.mzusd_borrowed()
         } else {
             0
-        }
         }
     }
 
     public(package) fun calculate_max_withdrawable(
+        clock: &Clock,
+        price_info_object: &PriceInfoObject,
         config: &MizuPayConfig,
         obligation: &Obligation,
     ): u64 {
         let padding_ratio = 5;
         let current_collateral = obligation.lbtc_deposit();
         let needed_value_for_current_borrow = obligation.mzusd_borrowed() * 100 / (mizupay::config::get_ltv_ratio(config) as u64 - padding_ratio);
-        let needed_collateral_amount = needed_value_for_current_borrow / mizupay::config::get_lbtc_price_in_mzusd(config);
+        let needed_collateral_amount = needed_value_for_current_borrow / pyth_util::get_price(clock, price_info_object);
         if (current_collateral > needed_collateral_amount) {
             current_collateral - needed_collateral_amount
         } else {
