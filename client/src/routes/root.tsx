@@ -112,13 +112,18 @@ function Root() {
           paddingBottom: "80px",
         }}
       >
-        <Container mx="auto" size="3" style={{ padding: "0 48px" }}>
+        <Container mx="auto" size="3" style={{ padding: "0 24px" }}>
           <Grid
             columns={{ initial: "1", md: "2" }}
-            gap={{ initial: "6", md: "24" }}
+            gap={{ initial: "6", md: "12" }}
           >
             {/* Left: Text content */}
-            <Flex direction="column" justify="center" gap="6">
+            <Flex
+              direction="column"
+              justify="center"
+              gap="6"
+              style={{ paddingLeft: 0 }}
+            >
               <Heading
                 as="h1"
                 size={{ initial: "9", xs: "9" }}
@@ -204,159 +209,22 @@ function Root() {
             <Box
               style={{
                 position: "relative",
-                minHeight: "300px",
-                marginLeft: "40px",
+                minHeight: "360px",
+                marginLeft: "0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Box
+              <img
+                src="/mizupay-landing.svg"
+                alt="MizuPay Landing Illustration"
                 style={{
-                  position: "absolute",
-                  right: "0",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  width: "100%",
-                  height: "100%",
-                  overflow: "hidden",
+                  width: "120%",
+                  maxHeight: "480px",
+                  objectFit: "contain",
                 }}
-              >
-                {/* Blockchain visual elements */}
-                <Box
-                  style={{
-                    position: "absolute",
-                    width: "120px",
-                    height: "120px",
-                    background: "rgba(77, 162, 255, 0.15)",
-                    borderRadius: "24px",
-                    bottom: "60px",
-                    right: "50px",
-                    boxShadow: "0 0 30px rgba(77, 162, 255, 0.3)",
-                    transform: "rotate(-15deg)",
-                    border: "1px solid rgba(77, 162, 255, 0.3)",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform =
-                      "rotate(-15deg) scale(1.05)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 40px rgba(77, 162, 255, 0.4)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "rotate(-15deg)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 30px rgba(77, 162, 255, 0.3)";
-                  }}
-                >
-                  <Text
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      color: "#4DA2FF",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    LBTC
-                  </Text>
-                </Box>
-
-                <Box
-                  style={{
-                    position: "absolute",
-                    width: "140px",
-                    height: "140px",
-                    background: "rgba(99, 201, 185, 0.15)",
-                    borderRadius: "24px",
-                    top: "40px",
-                    left: "80px",
-                    boxShadow: "0 0 30px rgba(99, 201, 185, 0.3)",
-                    transform: "rotate(10deg)",
-                    border: "1px solid rgba(99, 201, 185, 0.3)",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform =
-                      "rotate(10deg) scale(1.05)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 40px rgba(99, 201, 185, 0.4)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "rotate(10deg)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 30px rgba(99, 201, 185, 0.3)";
-                  }}
-                >
-                  <Text
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      color: "#63C9B9",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    mzUSD
-                  </Text>
-                </Box>
-
-                <Box
-                  style={{
-                    position: "absolute",
-                    width: "100px",
-                    height: "100px",
-                    background: "rgba(46, 90, 90, 0.15)",
-                    borderRadius: "24px",
-                    top: "160px",
-                    right: "120px",
-                    boxShadow: "0 0 30px rgba(46, 90, 90, 0.3)",
-                    transform: "rotate(-5deg)",
-                    border: "1px solid rgba(46, 90, 90, 0.3)",
-                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform =
-                      "rotate(-5deg) scale(1.05)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 40px rgba(46, 90, 90, 0.4)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "rotate(-5deg)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 30px rgba(46, 90, 90, 0.3)";
-                  }}
-                >
-                  <Text
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      color: "#2E5A5A",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    SUI
-                  </Text>
-                </Box>
-
-                {/* Connection lines */}
-                <Box
-                  style={{
-                    position: "absolute",
-                    top: "0",
-                    left: "0",
-                    width: "100%",
-                    height: "100%",
-                    opacity: 0.4,
-                    background:
-                      "linear-gradient(135deg, transparent, #4DA2FF, transparent, #63C9B9, transparent)",
-                  }}
-                ></Box>
-              </Box>
+              />
             </Box>
           </Grid>
         </Container>
