@@ -81,6 +81,7 @@ export function ChargeModal({
                         : "1px solid var(--gray-6)",
                     borderRadius: "8px",
                     transition: "all 0.2s",
+                    whiteSpace: "nowrap",
                   }}
                   onClick={() => setDestination("card")}
                 >
