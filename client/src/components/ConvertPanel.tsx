@@ -183,7 +183,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
       alert(
         `Successfully ${
           activeTab === "stake" ? "staked" : "unstaked"
-        } ${amount} ${fromToken} to ${estimated} ${toToken}`
+        } ${amount} ${fromToken} to ${estimated} ${toToken}`,
       );
     } catch (error: unknown) {
       console.error("Swap failed:", error);
@@ -201,7 +201,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
     <FeaturePanel>
       <Card
         style={{
-          maxWidth: "450px",
+          maxWidth: "500px",
           width: "100%",
           background: "rgba(1, 24, 41, 0.8)",
           border: "1px solid rgba(77, 162, 255, 0.3)",
@@ -267,7 +267,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
             <Flex gap="2" style={{ marginTop: "6px" }}>
               <Box
                 style={{
-                  width: "160px",
+                  width: "180px",
                   height: "45px",
                   border: "1px solid var(--gray-7)",
                   borderRadius: "8px",
@@ -336,7 +336,7 @@ export function ConvertPanel({ mode }: { mode: Mode }) {
             <Flex gap="2" style={{ marginTop: "6px" }}>
               <Box
                 style={{
-                  width: "160px",
+                  width: "180px",
                   height: "45px",
                   border: "1px solid var(--gray-7)",
                   borderRadius: "8px",

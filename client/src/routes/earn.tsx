@@ -68,7 +68,9 @@ function Earn() {
             </Text>
           </Flex>
           <Flex justify="center" width="100%">
-            <ConvertPanel mode="mzUSD" />
+            <Box style={{ width: "100%", maxWidth: "500px" }}>
+              <ConvertPanel mode="mzUSD" />
+            </Box>
           </Flex>
         </Container>
       </Section>
