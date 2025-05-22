@@ -108,7 +108,7 @@ module mizupay::lending {
         let mzusd_borrowed_amount = obligation.mzusd_borrowed_mut();
         *mzusd_borrowed_amount = *mzusd_borrowed_amount + amount;
 
-        coin::mint_and_transfer(vault.get_mzusd_treasury_cap(), amount, sender, ctx);
+        mizupay::mzusd::mint(vault.get_mzusd_treasury_cap(), amount, sender, ctx);
         
         emit(BorrowEvent {
             user: sender,

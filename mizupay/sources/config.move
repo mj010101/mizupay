@@ -1,6 +1,9 @@
 module mizupay::config {
     use sui::event::emit;
     use std::string::{Self, String};
+    use std::fixed_point32::FixedPoint32;
+    use std::uq64_64::UQ64_64;
+    use std::uq32_32::UQ32_32;
 
     // Error codes
     const EINVALID_LTV: u64 = 1;

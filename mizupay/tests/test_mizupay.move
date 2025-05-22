@@ -15,6 +15,7 @@ use mizupay::staking;
 use sui::coin::Coin;
 use std::unit_test::assert_eq;
 use std::debug::print;
+use std::string;
 
 const ADMIN_USER: address = @0x1;
 const USER: address = @0x2;
@@ -55,7 +56,7 @@ fun test_init_and_update_config() {
 
     let new_ltv_ratio = 75;
     let new_lbtc_price_in_mzusd = 1000000000000000001;
-    let new_smzusd_price_ratio = 10001;
+    let new_smzusd_price_ratio = 1_100_000_000;
 
     {
         let mut config = ts::take_shared<MizuPayConfig>(scenario);
@@ -237,7 +238,7 @@ fun test_staking() {
     let scenario = &mut scenario_val;
 
     let ltv_ratio = 70;
-    let lbtc_price_in_zusd = 100000;
+    let lbtc_price_in_zusd = 1_000_000_000;
 
     init_config(scenario, ltv_ratio, lbtc_price_in_zusd);
     init_mint_and_vault(scenario);
@@ -285,8 +286,20 @@ fun test_staking() {
     {
         let vault = ts::take_shared<Vault>(scenario);
         let staking_position = vault.get_staking_position(scenario.ctx());
+        let smzusd_coin = ts::take_from_address<Coin<SMZUSD>>(scenario, USER);
         assert!(staking_position.staked_amount() == stake_amount, 0);
+        assert!(smzusd_coin.value() == stake_amount, 0);
         ts::return_shared<Vault>(vault);
+        ts::return_to_address(USER, smzusd_coin);
+    };
+
+    scenario.next_tx(ADMIN_USER);
+
+    // update price ratio
+    {
+        let mut config = ts::take_shared<MizuPayConfig>(scenario);
+        config::update_smzusd_price_ratio(&mut config, 1_100_000_000, scenario.ctx());
+        ts::return_shared<MizuPayConfig>(config);
     };
 
     scenario.next_tx(USER);
@@ -295,10 +308,13 @@ fun test_staking() {
     {
         let config = ts::take_shared<MizuPayConfig>(scenario);
         let mut vault = ts::take_shared<Vault>(scenario);
-        staking::unstake(&config, &mut vault, stake_amount / 2, scenario.ctx());
+        let mut smzusd_coin = ts::take_from_address<Coin<SMZUSD>>(scenario, USER);
+        let half_mzusd_coin = sui::coin::split(&mut smzusd_coin, stake_amount / 2, scenario.ctx());
+        staking::unstake(&config, &mut vault, half_mzusd_coin, scenario.ctx());
 
         ts::return_shared<Vault>(vault);
         ts::return_shared<MizuPayConfig>(config);
+        ts::return_to_address(USER, smzusd_coin);
     };
 
     scenario.next_tx(USER);
@@ -307,17 +323,21 @@ fun test_staking() {
     {
         let vault = ts::take_shared<Vault>(scenario);
         let staking_position = vault.get_staking_position(scenario.ctx());
+        let mzusd_coin = ts::take_from_address<Coin<MZUSD>>(scenario, USER);
         assert!(staking_position.staked_amount() == stake_amount / 2, 0);
+        assert!(mzusd_coin.value() == ((stake_amount / 2) * 1_100_000_000 / 1_000_000_000), 0);
         ts::return_shared<Vault>(vault);
+        ts::return_to_address(USER, mzusd_coin);
     };
 
     scenario.next_tx(USER);
 
-    // Process Unstake All
+    // Process Close Staking Position
     {
         let config = ts::take_shared<MizuPayConfig>(scenario);
         let mut vault = ts::take_shared<Vault>(scenario);
-        staking::unstake(&config, &mut vault, stake_amount / 2, scenario.ctx());
+        let smzusd_coin = ts::take_from_address<Coin<SMZUSD>>(scenario, USER);
+        staking::close_staking_position(&config, &mut vault, smzusd_coin, scenario.ctx());
 
         ts::return_shared<Vault>(vault);
         ts::return_shared<MizuPayConfig>(config);
@@ -325,25 +345,15 @@ fun test_staking() {
 
     scenario.next_tx(USER);
 
-    // Check if all unstaked
-    {
-        let vault = ts::take_shared<Vault>(scenario);
-        let staking_position = vault.get_staking_position(scenario.ctx());
-        assert!(staking_position.staked_amount() == 0, 0);
-        ts::return_shared<Vault>(vault);
-    };
+    // // Check if all unstaked
+    // {
+    //     let vault = ts::take_shared<Vault>(scenario);
+    //     let staking_position = vault.get_staking_position(scenario.ctx());
+    //     assert!(staking_position.staked_amount() == 0, 0);
+    //     ts::return_shared<Vault>(vault);
+    // };
 
-    scenario.next_tx(USER);
-
-    // Close staking position
-    {
-        let config = ts::take_shared<MizuPayConfig>(scenario);
-        let mut vault = ts::take_shared<Vault>(scenario);
-        staking::close_staking_position(&config, &mut vault, scenario.ctx());
-
-        ts::return_shared<Vault>(vault);
-        ts::return_shared<MizuPayConfig>(config);
-    };
+    // scenario.next_tx(USER);
 
     ts::end(scenario_val);
 }
