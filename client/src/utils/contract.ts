@@ -68,7 +68,7 @@ export async function buildDepositAndBorrowTx(
   const depositCoin = txb.splitCoins(originalCoin, [txb.pure.u64(lbtcAmount)]);
 
   // deposit_collateral(
-  //   _config: &ZFubaoConfig,
+  //   _config: &MizuPayConfig,
   //   vault: &mut Vault,
   //   lbtc_coin: Coin<LBTC>,
   //   amount: u64,
@@ -85,7 +85,7 @@ export async function buildDepositAndBorrowTx(
   });
 
   // borrow(
-  //   config: &ZFubaoConfig,
+  //   config: &MizuPayConfig,
   //   vault: &mut Vault,
   //   amount: u64,
   //   ctx: &mut TxContext
@@ -209,7 +209,7 @@ export async function buildStakeTx(
   const stakeCoin = txb.splitCoins(originalCoin, [txb.pure.u64(mzusdAmount)]);
 
   // stake(
-  //   _config: &ZFubaoConfig,
+  //   _config: &MizuPayConfig,
   //   vault: &mut Vault,
   //   mzusd_coin: Coin<MZUSD>,
   //   ctx: &mut TxContext
@@ -233,7 +233,7 @@ export async function buildUnstakeTx(
   const txb = new Transaction();
 
   // unstake(
-  //   _config: &ZFubaoConfig,
+  //   _config: &MizuPayConfig,
   //   vault: &mut Vault,
   //   amount: u64,
   //   ctx: &mut TxContext
