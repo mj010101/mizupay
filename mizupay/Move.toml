@@ -2,7 +2,7 @@
 name = "mizupay"
 version = "0.0.1"
 edition = "2024.beta"
-published-at = "0xdf2ac204ef758ae05809c7171716f5ded8e6182a3f37c71473d69e4444bdcbd7"
+published-at = "0xb9e2b3e114cbc33707f1279a5d5e415d46f1d70213d121ce8eb6ee8526c8e8fb"
 
 [dependencies.Pyth]
 git = "https://github.com/pyth-network/pyth-crosschain.git"
